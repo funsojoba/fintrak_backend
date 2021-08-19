@@ -1,15 +1,10 @@
 import uuid
-import string
-import random
 
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager, PermissionsMixin
 
-
-def create_random():
-    str_num = string.hexdigits
-    return ''.join(random.choice(str_num) for i in range(8))
+from authentication.auth_utils.get_otp import create_random
 
 
 class UserManager(BaseUserManager):
@@ -45,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     avatar = models.URLField(default=AVATAR_URL)
     otp = models.CharField(max_length=8, default=create_random)
-    
+
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
