@@ -91,9 +91,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME', default='fintrak'),
         'USER': config('USER', default='user'),
-        'PASSWORD': config('PASSWORD'),
-        'HOST': config('HOST'),
-        'PORT': config('PORT')
+        'PASSWORD': config('PASSWORD', default='password'),
+        'HOST': config('HOST', default='host'),
+        'PORT': config('PORT', default='port')
     }
 }
 
