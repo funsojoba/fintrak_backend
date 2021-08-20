@@ -23,7 +23,6 @@ class ResetPasswordView(APIView):
         if password != confirm_password:
             return Response({"message": "failure", "error": "password and confirm password must match"}, status=status.HTTP_400_BAD_REQUEST)
 
-
         db_user = User.objects.filter(email=email)
 
         if not db_user.exists():

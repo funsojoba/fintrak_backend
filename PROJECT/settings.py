@@ -36,8 +36,9 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
-    #APPS
+    # APPS
     'authentication',
+    'user_app',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #INSTALLED APPS
+    # INSTALLED APPS
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -153,7 +154,7 @@ REST_FRAMEWORK = {
 }
 
 
-#JWT SETTINGS
+# JWT SETTINGS
 
 
 SIMPLE_JWT = {
