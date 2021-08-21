@@ -1,7 +1,11 @@
+from datetime import datetime
+from django.db.models import Sum
+
 from rest_framework.views import APIView
+from rest_framework import permissions, status
+
 from income_app.models import Income
 from income_app.serializers.income_serializer import IncomeSerializer
-from rest_framework import permissions, status
 from lib.response import Response
 
 class ListIncomeView(APIView):
@@ -16,4 +20,20 @@ class ListIncomeView(APIView):
         data = serializer.data
         count = income_query.count()
 
-        return Response(data={"data":data, "count":count}, status=status.HTTP_200_OK)
+        # income per month
+        current_month = datetime.now().month
+        income_per_month = Income.objects.filter(income_date__month=current_month)
+        current_month_serializer = self.serializer_class(income_per_month, many=True)
+
+        # total income
+        total_income = Income.objects.filter(income_date__month=current_month).aggregate(Sum('amount'))
+        #sum by source group
+
+        sum_by_sources = Income.objects.filter(income_date__month=current_month).values('source').annotate(source_total=Sum('amount'))
+        print(sum_by_sources)
+
+        return Response(data={"data":data, 
+                            "count":count, 
+                            "income_per_month":current_month_serializer.data, 
+                            'total_income':total_income,
+                            'income_per_source':sum_by_sources}, status=status.HTTP_200_OK)

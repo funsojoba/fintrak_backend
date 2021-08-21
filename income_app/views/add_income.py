@@ -22,6 +22,5 @@ class AddIncomeView(APIView):
         income_date = data.get('income_date', '')
 
         income = Income.objects.create(owner = owner, amount=amount, source=source, description=description, income_date=income_date)
-        income.save()
 
         return Response(data={"message":"success"}, status=status.HTTP_201_CREATED)
