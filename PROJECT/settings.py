@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import cloudinary
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-from django.conf import settings
+# from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ SECRET_KEY = 'django-insecure-h#y9qfpv7c--gkx@8#@!pbi&6-koacim=8&n5e4*_nj-^qkedt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
 
 AUTH_USER_MODEL = 'authentication.User'
 
@@ -165,7 +166,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
+    # 'SIGNING_KEY': settings.SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
@@ -197,3 +198,10 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL', default='')
+
+
+cloudinary.config(
+    cloud_name=config('CLOUD_NAME', default=''),
+    api_key=config('API_KEY', default=''),
+    api_secret=config('API_SECRET', default='')
+)
