@@ -1,0 +1,11 @@
+SOURCES = (
+        ('Wages/Salary', 'Wages/Salary'),
+        ('Gift', 'Gift'),
+        ('Profits', 'Profit'),
+        ('Interest', 'Interest'),
+        ('Dividend', 'Dividend'),
+        ('Royalty', 'Royalty'),
+        ('Commissions', 'Commissions'),
+        ('Allowance', 'Allowance'),
+        ('Others', 'Others'),
+    )

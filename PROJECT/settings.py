@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # APPS
     'authentication',
     'user_app',
+    'income_app',
 
     'django.contrib.admin',
     'django.contrib.auth',
