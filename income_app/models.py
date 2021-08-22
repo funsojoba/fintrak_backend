@@ -12,7 +12,7 @@ class Income(models.Model):
     source = models.CharField(max_length=245)
     description = models.CharField(max_length=255)
     income_date = models.DateField()
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

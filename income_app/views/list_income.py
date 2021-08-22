@@ -30,7 +30,6 @@ class ListIncomeView(APIView):
         #sum by source group
 
         sum_by_sources = Income.objects.filter(owner=owner, income_date__month=current_month).values('source').annotate(source_total=Sum('amount'))
-        print(sum_by_sources)
 
         return Response(data={"data":data, 
                             "count":count, 
