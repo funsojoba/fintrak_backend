@@ -1,0 +1,14 @@
+SOURCES = (
+        ('Tax', 'Tax'),
+        ('Transportation', 'Transportation'),
+        ('Feeding', 'Feeding'),
+        ('Rent','Rent'),
+        ('Investment', 'Investment'),
+        ('Utilities', 'Utilities'),
+        ('Clothings', 'Clothings'),
+        ('Electronics', 'Electronics'),
+        ('Others', 'Others'),
+    )
+
+
+    *************

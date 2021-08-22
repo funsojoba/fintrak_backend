@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'authentication',
     'user_app',
     'income_app',
+    'expense_app',
 
     'django.contrib.admin',
     'django.contrib.auth',

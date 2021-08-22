@@ -22,14 +22,14 @@ class ListIncomeView(APIView):
 
         # income per month
         current_month = datetime.now().month
-        income_per_month = Income.objects.filter(income_date__month=current_month)
+        income_per_month = Income.objects.filter(owner=owner, income_date__month=current_month)
         current_month_serializer = self.serializer_class(income_per_month, many=True)
 
         # total income
-        total_income = Income.objects.filter(income_date__month=current_month).aggregate(Sum('amount'))
+        total_income = Income.objects.filter(owner=owner, income_date__month=current_month).aggregate(Sum('amount'))
         #sum by source group
 
-        sum_by_sources = Income.objects.filter(income_date__month=current_month).values('source').annotate(source_total=Sum('amount'))
+        sum_by_sources = Income.objects.filter(owner=owner, income_date__month=current_month).values('source').annotate(source_total=Sum('amount'))
         print(sum_by_sources)
 
         return Response(data={"data":data, 
