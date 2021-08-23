@@ -51,25 +51,50 @@ class DashboardView(views.APIView):
             owner=user, expense_date__month=current_month).order_by('-created_at')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
-        days_range = [i for i in range(1, 32)]
+
+        # INCOME GRAPH DATA
+        income_dict = {}
+
+        for i in all_income:
+            income_dict[i.income_date.day] = i.amount
+
+        income_days = [i.income_date.day for i in all_income]
+
+        income_graph_data = []
+
+        for i in range(1, 32):
+            if i in income_days:
+                income_graph_data.append((i, income_dict[i]))
+            income_graph_data.append((i, 0))
+
+        #EXPENSE GRAPH DATA
 
         expense_dict = {}
 
-        for i in days_range:
-            for j in all_income:
-                if i == (j.income_date).day:
-                    expense_dict[i]=j.amount
+        for i in all_expense:
+            expense_dict[i.expense_date.day] = i.amount
         
+        expense_days = [i.expense_date.day for i in all_expense]
+        
+        expense_graph_data = []
 
+        for i in range(1, 32):
+            if i in expense_days:
+                expense_graph_data.append((i, expense_dict[i]))
+            expense_graph_data.append((i, 0))
+
+        pprint.pprint(income_graph_data)
+        pprint.pprint(expense_graph_data)
+  
         results = {
             "total_transaction": total_transaction,
             "sum_of_income": sum_of_income,
             "sum_of_expenses": sum_of_expenses,
             "available_balance": available_balance,
             "top_income": all_income_serialized.data[0:3],
-            "top_expense": all_expense_serialized.data[0:3]
+            "top_expense": all_expense_serialized.data[0:3],
+            "income_graph_data": income_graph_data,
+            "expense_graph_data": expense_graph_data
         }
 
         return Response(data=results, status=status.HTTP_200_OK)
-
-
