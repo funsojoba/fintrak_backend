@@ -1,13 +1,14 @@
-from django.db.models import Sum
-
+import csv
 from datetime import datetime
+from inspect import currentframe
+from django.db.models import Sum
+from django.http import HttpResponse
 
 from rest_framework import views, permissions, status
 
 from lib.response import Response
 from income_app.models import Income
 from expense_app.models import Expense
-
 from expense_app.serializers.expense_serializer import ExpenseSerializer
 from income_app.serializers.income_serializer import IncomeSerializer
 
@@ -52,16 +53,13 @@ class DashboardView(views.APIView):
 
         days_range = [i for i in range(1, 32)]
 
-        expense_graph = {}
-        date_list = [(i.expense_date).day for i in all_expense]
+        expense_dict = {}
 
         for i in days_range:
             for j in all_income:
                 if i == (j.income_date).day:
-                    expense_graph[i]=j.amount
-
-        print("********PRINGINT**********")
-        pprint.pprint(expense_graph)
+                    expense_dict[i]=j.amount
+        
 
         results = {
             "total_transaction": total_transaction,
@@ -73,3 +71,5 @@ class DashboardView(views.APIView):
         }
 
         return Response(data=results, status=status.HTTP_200_OK)
+
+
