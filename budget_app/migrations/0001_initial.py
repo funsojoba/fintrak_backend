@@ -16,11 +16,26 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Income',
+            name='BudgetIncome',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False, unique=True)),
                 ('amount', models.DecimalField(decimal_places=2, default=0, max_digits=20)),
                 ('source', models.CharField(max_length=245)),
+                ('month', models.CharField(max_length=254)),
+                ('description', models.CharField(max_length=255)),
+                ('income_date', models.DateField()),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='BudgetExpense',
+            fields=[
+                ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False, unique=True)),
+                ('amount', models.DecimalField(decimal_places=2, default=0, max_digits=20)),
+                ('month', models.CharField(max_length=254)),
+                ('category', models.CharField(max_length=245)),
                 ('description', models.CharField(max_length=255)),
                 ('income_date', models.DateField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

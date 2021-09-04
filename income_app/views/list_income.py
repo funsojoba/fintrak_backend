@@ -34,5 +34,5 @@ class ListIncomeView(APIView):
         return Response(data={"data":data, 
                             "count":count, 
                             "income_per_month":current_month_serializer.data, 
-                            'total_income':total_income,
+                            'total_income':total_income['amount__sum'] if total_income['amount__sum'] else 0,
                             'income_per_source':sum_by_sources}, status=status.HTTP_200_OK)

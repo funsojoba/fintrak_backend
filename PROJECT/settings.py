@@ -14,6 +14,7 @@ import cloudinary
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+import django_heroku
 # from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'income_app',
     'expense_app',
     'dashboard',
+    'budget_app',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,7 +97,7 @@ WSGI_APPLICATION = 'PROJECT.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='fintrak'),
+        'NAME': config('DB_NAME', default='fintrak_app'),
         'USER': config('USER', default='user'),
         'PASSWORD': config('PASSWORD', default='password'),
         'HOST': config('HOST', default='host'),
@@ -162,7 +165,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -208,3 +211,5 @@ cloudinary.config(
     api_key=config('API_KEY', default=''),
     api_secret=config('API_SECRET', default='')
 )
+
+django_heroku.settings(locals())

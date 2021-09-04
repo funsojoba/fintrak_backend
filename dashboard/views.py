@@ -1,8 +1,5 @@
-import csv
 from datetime import datetime
-from inspect import currentframe
 from django.db.models import Sum
-from django.http import HttpResponse
 
 from rest_framework import views, permissions, status
 
@@ -11,8 +8,6 @@ from income_app.models import Income
 from expense_app.models import Expense
 from expense_app.serializers.expense_serializer import ExpenseSerializer
 from income_app.serializers.income_serializer import IncomeSerializer
-
-import pprint
 
 
 class DashboardView(views.APIView):
@@ -37,9 +32,11 @@ class DashboardView(views.APIView):
         # SUM OF EXPENSES
         sum_of_expenses = Expense.objects.filter(
             owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
+        
+        sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
+        sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
 
-        available_balance = sum_of_income['amount__sum'] - \
-            sum_of_expenses['amount__sum']
+        available_balance = sum_of_income_amount - sum_of_expenses_amount
 
         # TOP 3 INCOMES
         all_income = Income.objects.filter(
@@ -83,13 +80,10 @@ class DashboardView(views.APIView):
                 expense_graph_data.append((i, expense_dict[i]))
             expense_graph_data.append((i, 0))
 
-        pprint.pprint(income_graph_data)
-        pprint.pprint(expense_graph_data)
-  
         results = {
             "total_transaction": total_transaction,
-            "sum_of_income": sum_of_income,
-            "sum_of_expenses": sum_of_expenses,
+            "sum_of_income": sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0,
+            "sum_of_expenses": sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0,
             "available_balance": available_balance,
             "top_income": all_income_serialized.data[0:3],
             "top_expense": all_expense_serialized.data[0:3],

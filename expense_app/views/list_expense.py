@@ -39,7 +39,7 @@ class ListExpenseView(views.APIView):
             "data": data,
             "count": count,
             "expense_per_month": current_month_serializer.data,
-            "total_expense": total_expense,
+            "total_expense": total_expense['amount__sum'] if total_expense['amount__sum'] else 0,
             "expense_by_category": expense_by_category
         }
         return Response(data=data_response, status=status.HTTP_200_OK)
