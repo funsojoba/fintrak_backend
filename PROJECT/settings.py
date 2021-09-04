@@ -39,7 +39,7 @@ AUTH_USER_MODEL = 'authentication.User'
 
 INSTALLED_APPS = [
     # APPS
-    'authentication',
+    'authentication.apps.AuthenticationConfig',
     'user_app',
     'income_app',
     'expense_app',
