@@ -4,7 +4,8 @@ from django.contrib import admin
 from authentication.models import user
 from expense_app.models import Expense
 from income_app.models import Income
-from budget_app.models import BudgetExpense, BudgetIncome
+from budget_app.models import BudgetExpense, BudgetIncome, TotalBudget
 
 
-admin.site.register((user.User, Expense, Income, BudgetExpense, BudgetIncome))
+admin.site.register((user.User, Expense, Income,
+                    BudgetExpense, BudgetIncome, TotalBudget))

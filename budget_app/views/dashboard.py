@@ -30,14 +30,15 @@ class BudgetDashboard(APIView):
         total_expense_data = total_expense['amount__sum'] if total_expense['amount__sum'] else 0
 
         budget_balance_from_db = TotalBudget.objects.filter(
-            month=datetime.now().month, owner=request.user)
+            month=datetime.now().month, owner=request.user).first()
 
-        budget_balance = budget_balance_from_db.amount if budget_balance_from_db else 0
+        budget_balance = budget_balance_from_db.total if budget_balance_from_db else 0
+        
 
         return Response(data={"income": income_data.data,
-                             "budget_balance": budget_balance,
                             "expense": expense_data.data,
+                            "budget_balance": budget_balance,
                             "total_income":total_income_data,
-                            "total_expense":total_expense_data
+                            "total_expense":total_expense_data,
                             }, status=status.HTTP_200_OK)
 
