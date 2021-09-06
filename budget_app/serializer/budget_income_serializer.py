@@ -5,4 +5,4 @@ from budget_app.models import BudgetIncome
 class BudgetIncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BudgetIncome
-        fields = ['owner', 'amount', 'source', 'month', 'description']
+        fields = '__all__'

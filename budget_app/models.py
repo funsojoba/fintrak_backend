@@ -11,12 +11,11 @@ class BudgetIncome(models.Model):
     source = models.CharField(max_length=245)
     month = models.CharField(max_length=254)
     description = models.CharField(max_length=255)
-    income_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
 
 class BudgetExpense(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
@@ -26,9 +25,22 @@ class BudgetExpense(models.Model):
     month = models.CharField(max_length=254)
     category = models.CharField(max_length=245)
     description = models.CharField(max_length=255)
-    income_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
+
+
+class TotalBudget(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    month = models.CharField(max_length=256)
+    total = models.DecimalField(decimal_places=2, max_digits=20, default=0)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.total)
+    
