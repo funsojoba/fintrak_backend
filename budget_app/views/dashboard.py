@@ -10,6 +10,7 @@ from budget_app.serializer.budget_income_serializer import BudgetIncomeSerialize
 from budget_app.serializer.budget_expense_serializer import BudgetExpenseSerializer
 from budget_app.serializer.total_budget_serializer import TotalBudgetSerializer
 
+from user_app.models import UserProfile
 
 
 class BudgetDashboard(APIView):
@@ -34,11 +35,14 @@ class BudgetDashboard(APIView):
 
         budget_balance = budget_balance_from_db.total if budget_balance_from_db else 0
         
+        currency = UserProfile.objects.filter(user=request.user).first()
+        user_currency = currency if currency else "$"
 
         return Response(data={"income": income_data.data,
                             "expense": expense_data.data,
                             "budget_balance": budget_balance,
                             "total_income":total_income_data,
                             "total_expense":total_expense_data,
+                            "currency":user_currency
                             }, status=status.HTTP_200_OK)
 

@@ -9,6 +9,7 @@ from expense_app.models import Expense
 from expense_app.serializers.expense_serializer import ExpenseSerializer
 from income_app.serializers.income_serializer import IncomeSerializer
 
+from user_app.models import UserProfile
 
 class DashboardView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -48,47 +49,47 @@ class DashboardView(views.APIView):
             owner=user, expense_date__month=current_month).order_by('-created_at')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
-
+        days_income = [0] * 31
+        days_expense = [0] * 31
+        days_label = [i for i in range(1, 32)]
+        
         # INCOME GRAPH DATA
         income_dict = {}
-
         for i in all_income:
             income_dict[i.income_date.day] = i.amount
 
         income_days = [i.income_date.day for i in all_income]
+        
+        for k, v in income_dict.items():
+            days_income[k-1] = v
 
-        income_graph_data = []
-
-        for i in range(1, 32):
-            if i in income_days:
-                income_graph_data.append((i, income_dict[i]))
-            income_graph_data.append((i, 0))
-
+        
         #EXPENSE GRAPH DATA
-
         expense_dict = {}
-
         for i in all_expense:
             expense_dict[i.expense_date.day] = i.amount
         
         expense_days = [i.expense_date.day for i in all_expense]
         
-        expense_graph_data = []
+        for k, v in expense_dict.items():
+            days_expense[k-1] = v
 
-        for i in range(1, 32):
-            if i in expense_days:
-                expense_graph_data.append((i, expense_dict[i]))
-            expense_graph_data.append((i, 0))
+        
+        currency = UserProfile.objects.filter(user=request.user).first()
+        user_currency = currency if currency else "$"
+
 
         results = {
             "total_transaction": total_transaction,
             "sum_of_income": sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0,
             "sum_of_expenses": sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0,
             "available_balance": available_balance,
+            "currency":user_currency,
             "top_income": all_income_serialized.data[0:3],
             "top_expense": all_expense_serialized.data[0:3],
-            "income_graph_data": income_graph_data,
-            "expense_graph_data": expense_graph_data
+            "income_graph_data": days_income,
+            "expense_graph_data": days_expense,
+            "days_label":days_label
         }
 
         return Response(data=results, status=status.HTTP_200_OK)
