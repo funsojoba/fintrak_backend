@@ -30,9 +30,8 @@ class RegisterView(APIView):
 
         otp = create_random()
         EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL')
-        email_text = f'Thank you for registering with us, \n\n Please visit the link below to activate your account'
-        email_body = f'Hi {first_name} {last_name}, \n {email_text} \n Visit <a href="{EMAIL_VERIFICATION_URL}' \
-            f'?otp={otp}&email={email}">link</a> to verify'
+        email_text = f'Thank you for registering with us, Please visit the link below to activate your account using this OTP <h2>{otp}</h2>'
+        email_body = f'''Hi {first_name} {last_name}, <br>{email_text} <br><p> Visit <a href="{EMAIL_VERIFICATION_URL}?email={email}">link</a> to verify</p>'''
 
         email_data = {
             "email_subject":"Account verification",
