@@ -85,8 +85,8 @@ class DashboardView(views.APIView):
             "sum_of_expenses": sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0,
             "available_balance": available_balance,
             "currency":user_currency,
-            "top_income": all_income_serialized.data[0:3],
-            "top_expense": all_expense_serialized.data[0:3],
+            "top_income": all_income_serialized.data[0:4],
+            "top_expense": all_expense_serialized.data[0:4],
             "income_graph_data": days_income,
             "expense_graph_data": days_expense,
             "days_label":days_label

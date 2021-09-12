@@ -8,7 +8,7 @@ from income_app.models import Income
 class DeleteIncomeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, pk):
+    def delete(self, request, pk):
         income = Income.objects.get(id=pk)
         income.delete()
         return Response(data={"message": "Income deleted"}, status=status.HTTP_204_NO_CONTENT)
