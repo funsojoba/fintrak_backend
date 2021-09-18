@@ -2,19 +2,19 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 
 from lib.response import Response
-from income_app.models import Income
-from income_app.serializers.income_serializer import IncomeSerializer
+from expense_app.models import Expense
+from expense_app.serializers.expense_serializer import ExpenseSerializer
 
 from user_app.models import UserProfile
 
 
-class IncomeDetial(APIView):
+class ExpenseDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = IncomeSerializer
+    serializer_class = ExpenseSerializer
 
     def get(self, request, pk):
-        income = Income.objects.get(id=pk)
-        serializer = self.serializer_class(income)
+        expense = Expense.objects.get(id=pk)
+        serializer = ExpenseSerializer(expense)
 
         user_profile = UserProfile.objects.filter(user=request.user).first()
         currency = user_profile.currency if user_profile else '$'
