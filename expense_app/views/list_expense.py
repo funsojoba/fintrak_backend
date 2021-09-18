@@ -19,8 +19,6 @@ class ListExpenseView(views.APIView):
         serializer = self.serializer_class(expense_query, many=True)
         data = serializer.data
 
-        
-
         # expense per month
         current_month = datetime.now().month
         expense_per_month = Expense.objects.filter(
