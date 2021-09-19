@@ -35,6 +35,8 @@ class BudgetExpense(models.Model):
 class TotalBudget(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     month = models.CharField(max_length=256)
+    total_budget_income = models.DecimalField(decimal_places=2, max_digits=20, default=0)
+    total_budget_expense = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     total = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               on_delete=models.CASCADE)

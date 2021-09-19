@@ -33,16 +33,21 @@ class BudgetDashboard(APIView):
         budget_balance_from_db = TotalBudget.objects.filter(
             month=datetime.now().month, owner=request.user).first()
 
+        all_budgets = TotalBudget.objects.filter(owner=request.user)
+        all_budget_serializer = TotalBudgetSerializer(all_budgets, many=True)
+       
         budget_balance = budget_balance_from_db.total if budget_balance_from_db else 0
         
         currency = UserProfile.objects.filter(user=request.user).first()
         user_currency = currency if currency else "$"
+
 
         return Response(data={"income": income_data.data,
                             "expense": expense_data.data,
                             "budget_balance": budget_balance,
                             "total_income":total_income_data,
                             "total_expense":total_expense_data,
+                            "all_budget":all_budget_serializer.data,
                             "currency":user_currency
                             }, status=status.HTTP_200_OK)
 

@@ -23,13 +23,13 @@ class AddExpense(views.APIView):
         serializer = self.seriailizer_class(data=data)
         serializer.is_valid(raise_exception=True)
 
-
         total_budget = TotalBudget.objects.filter(owner=owner, month=month).first()
 
         if not total_budget:
             return Response(errors={"budget_error":"You need to add expected income first"}, status=status.HTTP_400_BAD_REQUEST)
         
         total_budget.total -= int(amount)
+        total_budget.total_budget_expense += int(amount)
         total_budget.save()
 
         BudgetExpense.objects.create(owner=owner, month=month, amount=amount, category=category, description=description)

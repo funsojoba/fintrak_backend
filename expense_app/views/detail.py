@@ -18,9 +18,13 @@ class ExpenseDetail(APIView):
 
         user_profile = UserProfile.objects.filter(user=request.user).first()
         currency = user_profile.currency if user_profile else '$'
-
+        print(serializer.data)
         result = {
-            "data": serializer.data,
+            "id":serializer.data['id'],
+            "amount":serializer.data['amount'],
+            "description":serializer.data['description'],
+            "category":serializer.data['category'],
+            "expense_date":serializer.data['expense_date'],
             "currency": currency
         }
         return Response(data=result, status=status.HTTP_200_OK)

@@ -5,7 +5,7 @@ from lib.response import Response
 from expense_app.models import Expense
 
 
-class DeleteIncomeView(APIView):
+class DeleteExpenseView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, pk):

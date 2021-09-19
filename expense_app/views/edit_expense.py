@@ -21,10 +21,6 @@ class EditExpenseView(views.APIView):
         description = data.get('description', '')
         expense_date = data.get('income_date', '')
 
-        # for k, v in data.items():
-        #     if not v:
-        #         data[k] = serializer[k]
-
         if not amount:
             amount = expense.amount
 
@@ -35,7 +31,7 @@ class EditExpenseView(views.APIView):
             description = expense.description
 
         if not expense_date:
-            expense_date = expense.income_date
+            expense_date = expense.expense_date
 
         expense.amount = amount
         expense.category = category
