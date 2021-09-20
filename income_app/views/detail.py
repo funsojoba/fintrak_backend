@@ -17,7 +17,7 @@ class IncomeDetial(APIView):
         serializer = self.serializer_class(income)
 
         user_profile = UserProfile.objects.filter(user=request.user).first()
-        currency = user_profile.currency if user_profile else '$'
+        currency = user_profile.prefered_currency if user_profile else '$'
 
         result = {
             "data": serializer.data,

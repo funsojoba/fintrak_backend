@@ -39,7 +39,7 @@ class BudgetDashboard(APIView):
         budget_balance = budget_balance_from_db.total if budget_balance_from_db else 0
         
         currency = UserProfile.objects.filter(user=request.user).first()
-        user_currency = currency if currency else "$"
+        user_currency = currency.prefered_currency if currency else "$"
 
 
         return Response(data={"income": income_data.data,

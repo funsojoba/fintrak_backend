@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import UserProfile
+from authentication.models.user import User
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -10,3 +11,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class AvatarSerializer(serializers.Serializer):
     avatar = serializers.FileField()
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ['id', 'first_name', 'last_name', 'email', 'avatar']
+        model = User

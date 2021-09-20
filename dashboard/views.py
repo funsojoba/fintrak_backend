@@ -75,8 +75,8 @@ class DashboardView(views.APIView):
             days_expense[k-1] = v
 
         
-        currency = UserProfile.objects.filter(user=request.user).first()
-        user_currency = currency if currency else "$"
+        user_profile = UserProfile.objects.filter(user=request.user).first()
+        user_currency = user_profile.prefered_currency if user_profile else "$"
 
 
         results = {

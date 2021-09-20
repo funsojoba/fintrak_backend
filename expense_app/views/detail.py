@@ -17,7 +17,7 @@ class ExpenseDetail(APIView):
         serializer = ExpenseSerializer(expense)
 
         user_profile = UserProfile.objects.filter(user=request.user).first()
-        currency = user_profile.currency if user_profile else '$'
+        currency = user_profile.prefered_currency if user_profile else '$'
         print(serializer.data)
         result = {
             "id":serializer.data['id'],
