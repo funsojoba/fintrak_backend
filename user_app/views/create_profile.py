@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 
@@ -14,11 +15,12 @@ class CreateUserProfileView(APIView):
         data = request.data
         serializer = UserProfileSerializer(data=data)
 
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid()
 
         user = request.user
         phone = data.get('phone', '')
         address = data.get('address', '')
+        # datetime.strptime(date_time_str, '%d/%m/%y %H:%M:%S')
         date_of_birth = data.get('date_of_birth')
         prefered_currency = data.get('prefered_currency', '')
 
