@@ -7,5 +7,9 @@ from income_app.models import Income
 from budget_app.models import BudgetExpense, BudgetIncome, TotalBudget
 
 
-admin.site.register((User, Expense, Income,
-                    BudgetExpense, BudgetIncome, TotalBudget))
+admin.site.register(User)
+admin.site.register(Expense) 
+admin.site.register(Income)
+admin.site.register(BudgetExpense)
+admin.site.register(BudgetIncome)
+admin.site.register(TotalBudget)
