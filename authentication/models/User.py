@@ -3,8 +3,11 @@ import uuid
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager, PermissionsMixin
+from django.db.models.signals import post_save
 
 from authentication.auth_utils.get_otp import create_random
+from user_app.models import UserProfile
+from django.dispatch import receiver
 
 
 class UserManager(BaseUserManager):
@@ -56,3 +59,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} - {self.email}'
+
+
+@receiver(post_save, sender=User)
+def create_profile(post_save, sender=User, *args, **kwargs):
+    pass
