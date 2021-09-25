@@ -15,7 +15,7 @@ class BudgetIncome(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{str(self.amount)} - {self.month}'
+        return f'{str(self.amount)} - {self.month} - {self.owner} '
 
 
 class BudgetExpense(models.Model):
@@ -30,7 +30,7 @@ class BudgetExpense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{str(self.amount)} - {self.month}'
+        return f'{str(self.amount)} - {self.month} - {self.owner}'
 
 
 class TotalBudget(models.Model):
