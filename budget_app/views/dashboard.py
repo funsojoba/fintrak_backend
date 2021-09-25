@@ -37,6 +37,7 @@ class BudgetDashboard(APIView):
         all_budget_serializer = TotalBudgetSerializer(all_budgets, many=True)
        
         budget_balance = budget_balance_from_db.total if budget_balance_from_db else 0
+        budget_exists = True if budget_balance_from_db else False
         
         currency = UserProfile.objects.filter(user=request.user).first()
         user_currency = currency.prefered_currency if currency else "$"
@@ -48,6 +49,7 @@ class BudgetDashboard(APIView):
                             "total_income":total_income_data,
                             "total_expense":total_expense_data,
                             "all_budget":all_budget_serializer.data,
-                            "currency":user_currency
+                            "currency":user_currency,
+                            "budget_exists":budget_exists
                             }, status=status.HTTP_200_OK)
 
