@@ -60,7 +60,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f'{self.first_name} {self.last_name} - {self.email}'
 
-
-@receiver(post_save, sender=User)
-def create_profile(post_save, sender=User, *args, **kwargs):
-    pass

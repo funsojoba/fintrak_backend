@@ -7,6 +7,7 @@ from income_app.models import Income
 from budget_app.models import BudgetExpense, BudgetIncome, TotalBudget
 
 
+
 admin.site.register(User)
 admin.site.register(Expense) 
 admin.site.register(Income)
