@@ -5,7 +5,7 @@ from budget_app.models import TotalBudget, BudgetIncome, BudgetExpense
 from budget_app.serializer.total_budget_serializer import TotalBudgetSerializer
 from budget_app.serializer.budget_income_serializer import BudgetIncomeSerializer
 from budget_app.serializer.budget_expense_serializer import BudgetExpenseSerializer
-
+from user_app.models import UserProfile
 
 class BudgetDetailView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -21,7 +21,11 @@ class BudgetDetailView(views.APIView):
         expense = BudgetExpense.objects.filter(owner=owner, month=budget.month)
         serialized_expense = BudgetExpenseSerializer(expense, many=True)
         
+        user_profile = UserProfile.objects.filter(user=owner).first()
+        currency = user_profile.prefered_currency
+
         return Response(data={
+                    'currency':currency,
                     'budget':serializer.data,
                     'income':serialized_income.data,
                     'expense':serialized_expense.data}, status=status.HTTP_200_OK)
