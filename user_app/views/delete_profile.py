@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import permissions
+from rest_framework import permissions, status
 from authentication.models.user import User
 
 
@@ -12,4 +12,4 @@ class DeleteUserProfile(APIView):
         db_user = User.objects.get(id=user.id)
         db_user.is_active = False
         db_user.save()
-        return Response({"message":"success"})
+        return Response({"message":"account deleted"}, status=status.HTTP_204_NO_CONTENT)
