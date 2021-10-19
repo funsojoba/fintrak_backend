@@ -16,6 +16,6 @@ urlpatterns = [
     path('detail/<str:pk>', BudgetDetailView.as_view(), name='budget_detail'),
     path('edit-add-income/<str:id>', EditAddIncome.as_view(), name='edit_add_income'),
     path('edit-add-expense/<str:id>', EditAddExpense.as_view(), name='edit_add_expense'),
-    path('delete-budget-income/<str:pk>', DeleteBudgetIncome.as_view(), name='delete_budget_income'),
-    path('delete-budget-expense/<str:pk>',DeleteBudgetExpense.as_view(), name='delete_budget_expense'),
+    path('delete-income/<str:pk>', DeleteBudgetIncome.as_view(), name='delete_budget_income'),
+    path('delete-expense/<str:pk>',DeleteBudgetExpense.as_view(), name='delete_budget_expense'),
 ]
