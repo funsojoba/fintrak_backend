@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:18000
+    volumes:
+      - .:/app
+    ports:
+      - '18000:8000'
