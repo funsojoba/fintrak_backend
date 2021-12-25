@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 import cloudinary
+import django_heroku
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-import django_heroku
 # from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,7 +78,7 @@ ROOT_URLCONF = 'PROJECT.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -198,12 +199,13 @@ SIMPLE_JWT = {
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='dummy@email.com')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='dummy123')
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_FROM = config("EMAIL_FROM", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
 
 EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL', default='')
 
@@ -218,3 +220,10 @@ django_heroku.settings(locals())
 
 
 CORS_ALLOW_ALL_ORIGINS =True
+
+CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_MAX_RETRY = ""
+CELERY_RETRY_DELAY = ""

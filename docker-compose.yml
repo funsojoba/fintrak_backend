@@ -9,8 +9,12 @@ services:
       - .:/app
     ports:
       - '8000:8000'
+    environment:
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
     depends_on:
       - db
+      - redis
   db:
     image: 'postgres:12'
     hostname: postgres
@@ -21,4 +25,22 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
+  redis:
+    image: redis:alpine
+    container_name: fintra_redis
+  celery:
+    build: .
+    command: celery work --app=PROJECT --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
 

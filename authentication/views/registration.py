@@ -8,6 +8,8 @@ from authentication.serializers.register_serializer import RegisterSerializer
 from authentication.models.user import User
 from authentication.auth_utils.get_otp import create_random
 from authentication.auth_utils.send_mail import MailUtil
+from notifications.services import EmailServices
+
 
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -30,18 +32,32 @@ class RegisterView(APIView):
 
         otp = create_random()
         EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL')
-        email_text = f'Thank you for registering with us, Please visit the link below to activate your account using this OTP <h2>{otp}</h2>'
-        email_body = f'''Hi {first_name} {last_name}, <br>{email_text}<h4> Visit <a href="{EMAIL_VERIFICATION_URL}?email={email}">link</a> to verify</h4>'''
-
-        email_data = {
-            "email_subject":"Account verification",
-            "email_body": email_body,
-            "email_to":[email]
+        verification_link=f"{EMAIL_VERIFICATION_URL}?email={email}"
+        context={
+            "first_name":first_name,
+            "last_name":last_name,
+            "otp":otp,
+            "verification_link":verification_link
         }
+        
+        EmailServices.send_async(
+            template="register.html",
+            subject="Verify Email",
+            recipients=[email],
+            context=context
+        )
+        # email_text = f'Thank you for registering with us, Please visit the link below to activate your account using this OTP <h2>{otp}</h2>'
+        # email_body = f'''Hi {first_name} {last_name}, <br>{email_text}<h4> Visit <a href="{EMAIL_VERIFICATION_URL}?email={email}">link</a> to verify</h4>'''
 
-        is_send_mail = MailUtil.send_mail(email_data)
-        if not is_send_mail:
-            return Response({"error":"Email service is unavailable"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        # email_data = {
+        #     "email_subject":"Account verification",
+        #     "email_body": email_body,
+        #     "email_to":[email]
+        # }
+
+        # is_send_mail = MailUtil.send_mail(email_data)
+        # if not is_send_mail:
+        #     return Response({"error":"Email service is unavailable"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
         user = User.objects.create(first_name=first_name, last_name=last_name, email=email, password=password, otp=otp)
         user.set_password(password)
