@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'expense_app',
     'dashboard',
     'budget_app',
-    "corsheaders",
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # INSTALLED APPS
+    "corsheaders",
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -99,11 +99,11 @@ WSGI_APPLICATION = 'PROJECT.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='fintrak_app'),
-        'USER': config('USER', default='user'),
-        'PASSWORD': config('PASSWORD', default='password'),
-        'HOST': config('HOST', default='host'),
-        'PORT': config('PORT', default='port')
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('USER', default='postgres'),
+        'PASSWORD': config('PASSWORD', default='postgres'),
+        'HOST': config('HOST', default='db'),
+        'PORT': config('PORT', default=5432)
     }
 }
 

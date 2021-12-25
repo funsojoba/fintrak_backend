@@ -3,8 +3,22 @@ version: '3.3'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:18000
+    container_name: fintrak_image
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
-      - '18000:8000'
+      - '8000:8000'
+    depends_on:
+      - db
+  db:
+    image: 'postgres:12'
+    hostname: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+

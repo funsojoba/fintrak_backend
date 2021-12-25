@@ -9,7 +9,7 @@ from budget_app.models import BudgetExpense, TotalBudget
 
 class AddExpense(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
-    seriailizer_class = BudgetExpenseSerializer
+    serializer_class = BudgetExpenseSerializer
 
     def post(self, request):
         owner = request.user
@@ -20,7 +20,7 @@ class AddExpense(views.APIView):
         category = data.get('category', '')
         description = data.get('description', '')
 
-        serializer = self.seriailizer_class(data=data)
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
 
         total_budget = TotalBudget.objects.filter(owner=owner, month=month).first()
