@@ -22,5 +22,6 @@ make up - (this is to start docker-compose)
 
 - you will find example environment variables in the `.env-example`
 - you can look through the `Makefile` file for more docker command
+- your code should be running on `127.0.0.1:8000`
 
 Happy hacking 
