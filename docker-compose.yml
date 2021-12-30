@@ -30,7 +30,7 @@ services:
     container_name: fintra_redis
   celery:
     build: .
-    command: celery work --app=PROJECT --loglevel=info
+    command: celery -A PROJECT.celery worker -l info
     volumes:
       - .:/app
     depends_on:

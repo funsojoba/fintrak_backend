@@ -221,9 +221,10 @@ django_heroku.settings(locals())
 
 CORS_ALLOW_ALL_ORIGINS =True
 
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
