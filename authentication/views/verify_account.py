@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
+
+from lib.response import Response
 
 from authentication.auth_utils.get_otp import create_random
 from authentication.models.user import User
@@ -14,21 +15,19 @@ class VerifyAccountView(APIView):
         otp = data.get('otp')
         email = data.get('email')
 
-        user_db = User.objects.filter(email=email)
+        user_db = User.objects.filter(email=email).first()
 
-        if not otp or not email:
-            return Response({"message":"failure", "error":"Both otp and email are required"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if not user_db.exists():
-            return Response({"message":"failure", "error":"User does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_db:
+            return Response(errors={"message":"User does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = user_db[0]
-
-        if user.otp == otp and user.email == email:
-            user.otp = create_random()
-            user.is_active = True
-            user.save()
-            return Response({"message":"success", "data":"Account activated successfully"})
+        if user_db.otp == otp and user_db.email == email:
+            user_db.otp = create_random()
+            user_db.is_active = True
+            user_db.save()
+            return Response(data={"message":"Account activated successfully"})
         
-        return Response({"message":"failure", "error":"Invalid activation credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(errors={"message":"Invalid activation credentials"}, status=status.HTTP_400_BAD_REQUEST)
         

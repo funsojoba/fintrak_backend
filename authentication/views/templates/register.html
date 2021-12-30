@@ -6,39 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
         *{
             padding: 0;
             margin: 0;
             box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
 
         }
         body{
             background: #F5F5F5;
+            padding-top:10px;
         }
         .container{
             width: 65%;
             padding: 20px;
             color: #fff;
             margin: auto;
+            background: #fff;
         }
         .container-header{
-            padding: 40px;
             background: #1C246D;
+            display:flex;
+            justify-content:space-between;
+            position: relative;
+        }
+        
+        .container .container-title{
+            color: #1C246D;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            padding:20px;
+            border-bottom: 1px solid #E1E1E1;
+
+        }
+        
+        .container-header .container-header-image{
+            padding: 20px;
+        }
+        .container-header .container-header-image .image{
+            width:150px;
+        }
+        .container-header .container-header-image .image-mobile{
+            display:none;
+            width:30px;
+        }
+        .container-header .container-header-image .image-mobile img{
+            width:100%;
+        }
+        .container-header .container-header-image .image img{
+            width:100%;
+        }
+
+        .container-header .vector{
+            width:100px;
+            background:url('https://res.cloudinary.com/ddl2pf4qh/image/upload/v1640901288/fintrak/confetti_tumsxv.png');
+            background-size: cover;
+            background-repeat: no-repeat;
         }
         .container-header h2{
             text-align: center;
-            font-family: 'Roboto', sans-serif;
         }
         .container-body{
-            padding: 100px 80px;
-            background: #fff;
+            padding: 50px;
             color: #000;
         }
         .container-body p{
             margin-bottom: 20px;
             font-size: 1.12em;
-            font-family: 'Roboto', sans-serif;
         }
         .container-body code{
             background: #EAEAEA;
@@ -67,13 +103,22 @@
                 width: 90%;
             }
             .container-body{
-                padding: 50px 40px;
+                padding: 20px;
             }   
             .container-body .container-link{
                 width: 90%;
             }
             .container-body p{
                 font-size: 1em;
+            }
+            .container-header .container-header-image{
+                padding: 10px;
+            }
+            .container-header .container-header-image .image{
+                display:none;
+            }
+            .container-header .container-header-image .image-mobile{
+                display:block;
             }
          }
     </style>
@@ -82,8 +127,21 @@
 
     <div class="container">
         <div class="container-header">
-            <h2>Welcome on board  </h2>
+            <div class="container-header-image">
+                <div class="image">
+                    <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1633035942/fintrak/White_long_Logo_dtql0g.svg" />
+                </div>
+                <div class="image-mobile">
+                    <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1629388876/fintrak/FinLogoW_wr40ic.png" />
+                </div>
+            </div>
+            <div class="vector"></div>
         </div>
+
+        <div class="container-title">
+            <h1>Welcome on board</h1>
+        </div>
+
         <div class="container-body">
             <p>Hi {{first_name}} {{last_name}}</p>
             <p>

@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
+from lib.response import Response
 from rest_framework import status
 
 from authentication.models.user import User
@@ -21,18 +21,17 @@ class ResetPasswordView(APIView):
         serializer.is_valid(raise_exception=True)
 
         if password != confirm_password:
-            return Response({"message": "failure", "error": "password and confirm password must match"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(errors={"message": "password and confirm password must match"}, status=status.HTTP_400_BAD_REQUEST)
 
-        db_user = User.objects.filter(email=email)
+        db_user = User.objects.filter(email=email).first()
 
-        if not db_user.exists():
-            return Response({"message": "failure", "error": "invalid reset-password link"}, status=status.HTTP_400_BAD_REQUEST)
+        if not db_user:
+            return Response(errors={"message":"invalid reset-password link"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = db_user[0]
-        if user.otp != otp:
-            return Response({"message": "failure", "error": "invalid reset-password link"}, status=status.HTTP_400_BAD_REQUEST)
+        if db_user.otp != otp:
+            return Response(errors={"message": "invalid reset-password link"}, status=status.HTTP_400_BAD_REQUEST)
         
         user.otp = create_random()
         user.set_password(password)
         user.save()
-        return Response({"message": "success", "data": "password reset successfuly"}, status=status.HTTP_200_OK)
+        return Response(data={"message":"password reset successfuly"}, status=status.HTTP_200_OK)

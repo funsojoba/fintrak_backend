@@ -1,19 +1,19 @@
 from decouple import config
 
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import permissions, status
+
+from lib.response import Response
+from authentication.auth_utils.get_otp import create_random
+from rest_framework import status
 
 from authentication.serializers.register_serializer import RegisterSerializer
 from authentication.models.user import User
-from authentication.auth_utils.get_otp import create_random
-from authentication.auth_utils.send_mail import MailUtil
+
 from notifications.services import EmailServices
-from notifications.tasks import send_mail_async
+
 
 
 class RegisterView(APIView):
-    permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
     def post(self, request):
         data = request.data
@@ -25,11 +25,7 @@ class RegisterView(APIView):
         password = data.get('password', '')
 
         if not serializer.is_valid():
-            return Response({"error": serializer.errors, "data": None}, status=status.HTTP_400_BAD_REQUEST)
-
-        user_from_db = User.objects.filter(email=email)
-        if user_from_db.exists():
-            return Response({"error":"Email already exist", "data":"null"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(errors=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         otp = create_random()
         EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL')
@@ -40,7 +36,6 @@ class RegisterView(APIView):
             "otp":otp,
             "verification_link":verification_link
         }
-        
         EmailServices.send_async(
             template="register.html",
             subject="Verify Email",
@@ -51,4 +46,4 @@ class RegisterView(APIView):
         user.set_password(password)
         user.save()
 
-        return Response({"message":"success"}, status=status.HTTP_201_CREATED)
+        return Response(data={"message":"Confirmation email sent to your email"}, status=status.HTTP_201_CREATED)
