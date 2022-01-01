@@ -30,6 +30,7 @@ services:
   redis:
     image: redis:alpine
     container_name: fintra_redis
+
   celery:
     build: .
     command: celery -A PROJECT.celery worker -l info
@@ -37,6 +38,23 @@ services:
       - .:/app
     depends_on:
       - web
+      - redis
+  
+  celery_beat:
+    build: .
+    command:
+      [
+        'celery',
+        '--app=platform_api',
+        'beat',
+        '--scheduler=django_celery_beat.schedulers:DatabaseScheduler',
+        '--loglevel=INFO',
+      ]
+    volumes:
+      - ./:/app
+    depends_on:
+      - web
+      - db
       - redis
 
   mailhog:

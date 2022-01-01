@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+        body{
+            background: #F5F5F5;
+            padding-top:10px;
+        }
+        .container{
+            width: 65%;
+            padding: 20px;
+            color: #fff;
+            margin: auto;
+            background: #fff;
+        }
+        .container-header{
+            background: #1C246D;
+            display:flex;
+            justify-content:space-between;
+            position: relative;
+        }
+        
+        .container .container-title{
+            color: #1C246D;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            padding:20px;
+            border-bottom: 1px solid #E1E1E1;
+
+        }
+        
+        .container-header .container-header-image{
+            padding: 20px;
+        }
+        .container-header .container-header-image .image{
+            width:150px;
+        }
+        .container-header .container-header-image .image-mobile{
+            display:none;
+            width:30px;
+        }
+        .container-header .container-header-image .image-mobile img{
+            width:100%;
+        }
+        .container-header .container-header-image .image img{
+            width:100%;
+        }
+
+        .container-header .vector{
+            width:100px;
+            background:url('https://res.cloudinary.com/ddl2pf4qh/image/upload/v1640939017/fintrak/docs_oxuiy6.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .container-header h2{
+            text-align: center;
+        }
+        .container-body{
+            padding: 50px;
+            color: #000;
+        }
+        .container-body p{
+            margin-bottom: 20px;
+            font-size: 1.12em;
+        }
+        .container-body code{
+            background: #EAEAEA;
+            border-radius: 5px;
+            font-size: 2em; 
+            padding: 5px;
+        }
+        .container-body .container-link{
+            margin: 30px auto;
+            width: 250px;
+        }
+        .container-body .container-link a{
+            display: inline-block;
+            padding: 20px;
+            border-radius: 50px;
+            background: #1C246D;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        @media screen and (max-width: 720px) {
+           .container{
+                width: 90%;
+            }
+            .container-body{
+                padding: 20px;
+            }   
+            .container-body .container-link{
+                width: 90%;
+            }
+            .container-body p{
+                font-size: 1em;
+            }
+            .container-header .container-header-image{
+                padding: 10px;
+            }
+            .container-header .container-header-image .image{
+                display:none;
+            }
+            .container-header .container-header-image .image-mobile{
+                display:block;
+            }
+         }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="container-header">
+            <div class="container-header-image">
+                <div class="image">
+                    <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1633035942/fintrak/White_long_Logo_dtql0g.svg" />
+                </div>
+                <div class="image-mobile">
+                    <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1629388876/fintrak/FinLogoW_wr40ic.png" />
+                </div>
+            </div>
+            <div class="vector"></div>
+        </div>
+
+        <div class="container-title">
+            <h1>We've got a report!</h1>
+        </div>
+
+        <div class="container-body">
+            <p>Hi {{first_name}} {{last_name}}</p>
+            <p>
+                So a month have passed and we have compiled a report of your activities for the month, take a look 
+            </p>
+
+            <div class="container-link">
+                <a href="{{verification_link}}">View Report</a>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

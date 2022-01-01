@@ -93,3 +93,7 @@ class DashboardView(views.APIView):
         }
 
         return Response(data=results, status=status.HTTP_200_OK)
+
+
+class ReportView(views.APIView):
+    pass

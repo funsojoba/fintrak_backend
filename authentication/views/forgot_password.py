@@ -28,9 +28,7 @@ class ForgotPasswordView(APIView):
         otp = user.otp
 
         RESET_EMAIL_URL = config('RESET_EMAIL_URL')
-        # email_text = f'Follow the link below to reset your password'
-        # email_body = f'Hi {user.first_name} {user.last_name}, \n {email_text} \n Visit <a href="{RESET_EMAIL_URL}' \
-        #     f'?otp={otp}&email={email}">link</a> to verify'
+        
         reset_password_link =f'{RESET_EMAIL_URL}?otp={otp}&email={email}'
         context = {
             "first_name":user.first_name,
@@ -43,14 +41,5 @@ class ForgotPasswordView(APIView):
             recipients=[email], 
             context=context)
         
-        # email_data = {
-        #     "email_subject":"Reset Password",
-        #     "email_body": email_body,
-        #     "email_to":[email]
-        # }
-        # is_send_mail = MailUtil.send_mail(email_data)
-        # if not is_send_mail:
-        #     return Response({"error": "Email service is unavailable"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-
         return Response(data={"message":"reset password link sent to your email"}, status=status.HTTP_200_OK)
         

@@ -22,10 +22,10 @@ class ChangePasswordView(APIView):
 
         correct_current_password = user_detail.check_password(current_password)
         if not correct_current_password:
-            return Response(errors={"password error":"current password is not correct"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(errors={"message":"current password is not correct"}, status=status.HTTP_400_BAD_REQUEST)
 
         user_detail.set_password(new_password)
         user_detail.save()
 
-        return Response(data={"info":"password reset successfully"}, status=status.HTTP_200_OK)
+        return Response(data={"message":"password reset successfully"}, status=status.HTTP_200_OK)
 
