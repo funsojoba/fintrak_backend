@@ -5,8 +5,202 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+        *{
+            padding:0;
+            margin:0;
+            box-sizing:border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        body{
+            background: #F5F5F5;
+            padding:20px;
+        }
+        .container{
+            max-width:750px;
+            margin:auto;
+            background:#fff;
+        }
+        .container-head{
+            background: #1C246D;
+            padding: 10px;
+        }
+        .container-body{
+            padding:20px;
+        }
+        .title{
+            padding:20px;
+            margin-top:10px;
+        }
+        .title h2{
+            text-align:center;
+        }
+        .container-body .content .content-header{
+            background: #1C246D;
+            color:#D7FFC5;
+            text-align:center;
+            padding:5px;
+        }
+        .table{
+            overflow-x:auto;
+        }
+        table{
+            width:100%;
+            border-collapse: collapse;
+        }
+        table thead{
+            background:#F5F5F5;
+            text-align:left;
+        }
+        table thead th{
+            padding:10px;
+            border: solid 1px #E1E1E1;
+        }
+        table tbody tr td{
+            padding:10px;
+            border: solid 1px #E1E1E1;
+        }
+        #expense{
+            color:#FF9C9C;
+        }
+        #total{
+            font-weight: bold;
+        }
+        .balance{
+            background: #1C246D;
+            width:100%;
+            display:flex;
+            color:#A4E9FF;
+            padding: 10px 20px;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .budget{
+            padding:20px;
+        }
+        #budget-income{
+            background: #F2FFEC;
+        }
+        #budget-expense{
+            background: #FFEBEB;
+        }
+        #budget-balance{
+            background: #EBEFFF;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="container-head">
+            <div class="image">
+                <img src="https://res.cloudinary.com/ddl2pf4qh/image/upload/v1633035942/fintrak/White_long_Logo_dtql0g.svg" />
+            </div>
+        </div>
+
+        <div class="container-body">
+            <div class="title">
+                <h2>{{full_month_name}}'s Report</h2>
+            </div>
+            <div class="content">
+                <div class="content-header">
+                    <h3 id="expense">Expenses</h3>
+                </div>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                        </thead>
+                        <tbody>
+                            {% for expense in all_expense %}
+                            <tr>
+                                <td>{{expense.expense_date}}</td>
+                                <td>{{expense.description}}</td>
+                                <td>{{expense.category}}</td>
+                                <td>{{currency}} {{expense.amount}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr id="total">
+                                <td>Total Income</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{currency}} {{total_expense}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="content">
+                <div class="content-header">
+                    <h3>Income</h3>
+                </div>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Source</th>
+                            <th>Amount</th>
+                        </thead>
+                        <tbody>
+                            {% for income in all_income %}
+                            <tr>
+                                <td>{{income.income_date}}</td>
+                                <td>{{income.description}}</td>
+                                <td>{{income.source}}</td>
+                                <td>{{currency}} {{income.amount}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr id="total">
+                                <td>Total Income</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{currency}} {{total_income}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="balance">
+                    <h4>
+                        Available Balance
+                    </h4>
+                    <h4>
+                        {{available_balance}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="title">
+            <h2>Budget Report</h2>
+        </div>
+        <div class="budget">
+            <div class="table">
+                <table>
+                    <thead>
+                        <th>Month</th>
+                        <th id="budget-income">Est. Income</th>
+                        <th id="budget-expense">Est. Expense</th>
+                        <th id="budget-balance">Est. Balance</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{month}}</td>
+                            <td>{{currency}} {{budget_income}}</td>
+                            <td>{{currency}} {{budget_expenses}}</td>
+                            <td>{{currency}} {{budget_balance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     
 </body>
 </html>

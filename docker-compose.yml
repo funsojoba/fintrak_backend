@@ -45,7 +45,7 @@ services:
     command:
       [
         'celery',
-        '--app=platform_api',
+        '--app=PROJECT',
         'beat',
         '--scheduler=django_celery_beat.schedulers:DatabaseScheduler',
         '--loglevel=INFO',
