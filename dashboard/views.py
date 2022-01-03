@@ -44,6 +44,10 @@ class DashboardView(views.APIView):
             owner=user, income_date__month=current_month).order_by('-created_at')
         all_income_serialized = IncomeSerializer(all_income, many=True)
 
+        group_income = Expense.objects.filter(
+            owner=user, expense_date__month=current_month).values('expense_date__day').order_by('-created_at').annotate(expense_date__day=Sum('amount'))
+
+        print("****>>>", group_income)
         # TOP 3 EXPENSES
         all_expense = Expense.objects.filter(
             owner=user, expense_date__month=current_month).order_by('-created_at')
@@ -69,6 +73,7 @@ class DashboardView(views.APIView):
         for i in all_expense:
             expense_dict[i.expense_date.day] = i.amount
         
+        # print("****====--->>", expense_dict)
         expense_days = [i.expense_date.day for i in all_expense]
         
         for k, v in expense_dict.items():
@@ -96,4 +101,18 @@ class DashboardView(views.APIView):
 
 
 class ReportView(views.APIView):
-    pass
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        current_month = datetime.now().month
+        
+        # TOP 3 INCOMES
+        all_income = Income.objects.filter(
+            owner=user, income_date__month=current_month).order_by('-created_at')
+        all_income_serialized = IncomeSerializer(all_income, many=True)
+
+        # TOP 3 EXPENSES
+        all_expense = Expense.objects.filter(
+            owner=user, expense_date__month=current_month).order_by('-created_at')
+        all_expense_serialized = ExpenseSerializer(all_expense, many=True)
