@@ -3,7 +3,12 @@ from django.db.models import Sum
 
 from rest_framework import views, permissions, status
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+
 from lib.response import Response
+from lib.render_to_pdf import render_to_pdf
 from income_app.models import Income
 from expense_app.models import Expense
 from expense_app.serializers.expense_serializer import ExpenseSerializer
@@ -141,8 +146,6 @@ class ReportView(views.APIView):
         month_name = datetime_object.strftime("%b")
         full_month_name = datetime_object.strftime("%B")
 
-
-        
         context={
                 "all_expense":all_expense_serialized.data,
                 "total_expense":sum_of_expenses_amount,
@@ -158,7 +161,7 @@ class ReportView(views.APIView):
             }
         EmailServices.send_async(
             template="report.html",
-            subject="Report",
+            subject=f"Fintrak {full_month_name} Report",
             recipients=[user.email],
             context=context
         )
@@ -168,15 +171,67 @@ class ReportView(views.APIView):
         )
         
 
+def get_report_context(user):
+    current_month = datetime.now().month 
+    user_profile = UserProfile.objects.filter(user=user).first()
+    currency = user_profile.prefered_currency if user_profile else '$'
+    
+    # TOP 3 INCOMES
+    all_income = Income.objects.filter(
+        owner=user, income_date__month=current_month).order_by('-created_at')
+    all_income_serialized = IncomeSerializer(all_income, many=True)
+
+    # TOP 3 EXPENSES
+    all_expense = Expense.objects.filter(
+        owner=user, expense_date__month=current_month).order_by('-created_at')
+    all_expense_serialized = ExpenseSerializer(all_expense, many=True)
+    # SUM OF INCOME
+    sum_of_income = Income.objects.filter(
+        owner=user, income_date__month=current_month).aggregate(Sum('amount'))
+
+    # SUM OF EXPENSES
+    sum_of_expenses = Expense.objects.filter(
+        owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
+    
+    sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
+    sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
+    available_balance = sum_of_income_amount - sum_of_expenses_amount
+
+    total_budget = TotalBudget.objects.filter(owner=user, month=current_month).first()
+    total_budget_income = total_budget.total_budget_income if total_budget.total_budget_income else 0
+    total_budget_expense = total_budget.total_budget_expense if total_budget.total_budget_expense else 0
+    total_budget_balance = total_budget.total if total_budget.total else 0
+    
+
+    datetime_object = datetime.strptime(str(current_month), "%m")
+    month_name = datetime_object.strftime("%b")
+    full_month_name = datetime_object.strftime("%B")
+
+    context={
+            "all_expense":all_expense_serialized.data,
+            "total_expense":sum_of_expenses_amount,
+            "all_income":all_income_serialized.data,
+            "total_income":sum_of_income_amount,
+            "available_balance":available_balance,
+            "month":month_name,
+            "full_month_name":full_month_name,
+            "budget_income":total_budget_income,
+            "budget_expenses":total_budget_expense,
+            "budget_balance":total_budget_balance,
+            "currency":currency
+        }
+    EmailServices.send_async(
+        template="report.html",
+        subject=f"Fintrak {full_month_name} Report",
+        recipients=[user.email],
+        context=context
+    )
+    return context
+
 class GeneratePDF(views.APIView):
     def get(self, request, *args, **kwargs):
         template = get_template('report.html')
-        context = {
-            "invoice_id": 123,
-            "customer_name": "John Cooper",
-            "amount": 1399.99,
-            "today": "Today",
-        }
+        context = get_report_context(request.user)
         html = template.render(context)
         pdf = render_to_pdf('invoice.html', context)
         if pdf:
@@ -189,3 +244,65 @@ class GeneratePDF(views.APIView):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found")
+
+class NewGeneratePdf(views.APIView):
+    def get(self, request, *args, **kwargs):
+        data = get_report_context(request.user)
+        pdf = render_to_pdf('report.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+def generate_report(user):
+    current_month = datetime.now().month
+    user_profile = UserProfile.objects.filter(user=user).first()
+    currency = user_profile.prefered_currency if user_profile else '$'
+    
+    # TOP 3 INCOMES
+    all_income = Income.objects.filter(
+        owner=user, income_date__month=current_month).order_by('-created_at')
+    all_income_serialized = IncomeSerializer(all_income, many=True)
+
+    # TOP 3 EXPENSES
+    all_expense = Expense.objects.filter(
+        owner=user, expense_date__month=current_month).order_by('-created_at')
+    all_expense_serialized = ExpenseSerializer(all_expense, many=True)
+    # SUM OF INCOME
+    sum_of_income = Income.objects.filter(
+        owner=user, income_date__month=current_month).aggregate(Sum('amount'))
+
+    # SUM OF EXPENSES
+    sum_of_expenses = Expense.objects.filter(
+        owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
+    
+    sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
+    sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
+    available_balance = sum_of_income_amount - sum_of_expenses_amount
+
+    total_budget = TotalBudget.objects.filter(owner=user, month=current_month).first()
+    total_budget_income = total_budget.total_budget_income if total_budget.total_budget_income else 0
+    total_budget_expense = total_budget.total_budget_expense if total_budget.total_budget_expense else 0
+    total_budget_balance = total_budget.total if total_budget.total else 0
+    
+
+    datetime_object = datetime.strptime(str(current_month), "%m")
+    month_name = datetime_object.strftime("%b")
+    full_month_name = datetime_object.strftime("%B")
+
+    context={
+            "all_expense":all_expense_serialized.data,
+            "total_expense":sum_of_expenses_amount,
+            "all_income":all_income_serialized.data,
+            "total_income":sum_of_income_amount,
+            "available_balance":available_balance,
+            "month":month_name,
+            "full_month_name":full_month_name,
+            "budget_income":total_budget_income,
+            "budget_expenses":total_budget_expense,
+            "budget_balance":total_budget_balance,
+            "currency":currency
+        }
+    EmailServices.send_async(
+        template="report.html",
+        subject=f"Fintrak {full_month_name} Report",
+        recipients=[user.email],
+        context=context
+    )

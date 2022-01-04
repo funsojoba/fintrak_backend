@@ -1,16 +1,17 @@
 from celery import shared_task
 from datetime import datetime
+from authentication.models.user import User
 
 
-
+@shared_task(name="finance_report")
 def finance_report():
-    current_month = datetime.now().month
-    
-    all_income = Income.objects.filter(
-            owner=user, income_date__month=current_month).order_by('-created_at')
-    
-    all_expense = Expense.objects.filter(
-            owner=user, expense_date__month=current_month).order_by('-created_at')
-    
+        users = User.objects.all()
+        
+        for user in users:
+                pass
+        
+        current_month = datetime.now().month
+
+
 
 
