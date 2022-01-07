@@ -17,9 +17,14 @@ services:
     depends_on:
       - db
       - redis
+    links:
+      - db:db
+    networks:
+      - djangonetwork
   db:
     image: 'postgres:12'
     hostname: postgres
+    container_name: db
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
@@ -27,6 +32,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5433:5432'
+    networks:
+      - djangonetwork
   redis:
     image: redis:alpine
     container_name: fintra_redis
@@ -63,4 +70,8 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+
+networks:
+  djangonetwork:
+    driver: bridge
 
