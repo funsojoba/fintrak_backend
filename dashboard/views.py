@@ -21,25 +21,25 @@ from notifications.services import EmailServices
 class DashboardView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, month_id):
         user = request.user
         current_month = datetime.now().month
 
         # TOTAL TRANSACTIONS
         income = Income.objects.filter(
-            owner=user, income_date__month=current_month)
+            owner=user, income_date__month=month_id)
         expense = Expense.objects.filter(
-            owner=user, expense_date__month=current_month)
+            owner=user, expense_date__month=month_id)
 
         total_transaction = income.count() + expense.count()
 
         # SUM OF INCOME
         sum_of_income = Income.objects.filter(
-            owner=user, income_date__month=current_month).aggregate(Sum('amount'))
+            owner=user, income_date__month=month_id).aggregate(Sum('amount'))
 
         # SUM OF EXPENSES
         sum_of_expenses = Expense.objects.filter(
-            owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
+            owner=user, expense_date__month=month_id).aggregate(Sum('amount'))
         
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
@@ -48,16 +48,13 @@ class DashboardView(views.APIView):
 
         # TOP 3 INCOMES
         all_income = Income.objects.filter(
-            owner=user, income_date__month=current_month).order_by('-created_at')
+            owner=user, income_date__month=month_id).order_by('-created_at')
         all_income_serialized = IncomeSerializer(all_income, many=True)
-
-        # group_income = Expense.objects.filter(
-        #     owner=user, expense_date__month=current_month).values('expense_date__day').order_by('-created_at').annotate(expense_date__day=Sum('amount'))
 
 
         # TOP 3 EXPENSES
         all_expense = Expense.objects.filter(
-            owner=user, expense_date__month=current_month).order_by('-created_at')
+            owner=user, expense_date__month=month_id).order_by('-created_at')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
         days_income = [0] * 31
@@ -109,42 +106,46 @@ class DashboardView(views.APIView):
 class ReportView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, month_id, year_id):
         user = request.user
         current_month = datetime.now().month
+        current_year = datetime.now().year
+        
         user_profile = UserProfile.objects.filter(user=user).first()
         currency = user_profile.prefered_currency if user_profile else '$'
         
         # TOP 3 INCOMES
         all_income = Income.objects.filter(
-            owner=user, income_date__month=current_month).order_by('-created_at')
+            owner=user, income_date__month=month_id, income_date__year=year_id).order_by('-created_at')
         all_income_serialized = IncomeSerializer(all_income, many=True)
 
         # TOP 3 EXPENSES
         all_expense = Expense.objects.filter(
-            owner=user, expense_date__month=current_month).order_by('-created_at')
+            owner=user, expense_date__month=month_id,expense_date__year=year_id,).order_by('-created_at')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
         # SUM OF INCOME
         sum_of_income = Income.objects.filter(
-            owner=user, income_date__month=current_month).aggregate(Sum('amount'))
+            owner=user, income_date__month=month_id, income_date__year=year_id).aggregate(Sum('amount'))
 
         # SUM OF EXPENSES
         sum_of_expenses = Expense.objects.filter(
-            owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
+            owner=user, expense_date__month=month_id, expense_date__year=year_id).aggregate(Sum('amount'))
         
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
         available_balance = sum_of_income_amount - sum_of_expenses_amount
 
-        total_budget = TotalBudget.objects.filter(owner=user, month=current_month).first()
-        total_budget_income = total_budget.total_budget_income if total_budget.total_budget_income else 0
-        total_budget_expense = total_budget.total_budget_expense if total_budget.total_budget_expense else 0
-        total_budget_balance = total_budget.total if total_budget.total else 0
+        total_budget = TotalBudget.objects.filter(owner=user, month=month_id).first()
+        total_budget_income = total_budget.total_budget_income if total_budget else 0
+        total_budget_expense = total_budget.total_budget_expense if total_budget else 0
+        total_budget_balance = total_budget.total if total_budget else 0
         
 
-        datetime_object = datetime.strptime(str(current_month), "%m")
+        datetime_object = datetime.strptime(str(month_id), "%m")
         month_name = datetime_object.strftime("%b")
         full_month_name = datetime_object.strftime("%B")
+
+        print(type(year_id), type(current_year))
 
         context={
                 "all_expense":all_expense_serialized.data,
@@ -153,10 +154,11 @@ class ReportView(views.APIView):
                 "total_income":sum_of_income_amount,
                 "available_balance":available_balance,
                 "month":month_name,
+                "year":year_id,
                 "full_month_name":full_month_name,
-                "budget_income":total_budget_income,
-                "budget_expenses":total_budget_expense,
-                "budget_balance":total_budget_balance,
+                "budget_income":total_budget_income if year_id == str(current_year) else None,
+                "budget_expenses":total_budget_expense if year_id == str(current_year) else None,
+                "budget_balance":total_budget_balance if year_id == str(current_year) else None,
                 "currency":currency
             }
         EmailServices.send_async(

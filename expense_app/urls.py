@@ -9,7 +9,7 @@ from .views.detail import ExpenseDetail
 from .views.delete_expense import DeleteExpenseView
 
 urlpatterns = [
-    path('list', ListExpenseView.as_view(), name="expense-list"),
+    path('list/<str:month_id>', ListExpenseView.as_view(), name="expense-list"),
     path('add', AddExpenseView.as_view(), name="add-list"),
     path('edit/<str:pk>', EditExpenseView.as_view(), name="edit-list"),
     path('expense-csv', ExportExpenseCsv.as_view(), name="expense-csv"),

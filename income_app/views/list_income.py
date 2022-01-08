@@ -13,21 +13,20 @@ class ListIncomeView(APIView):
     serializer_class = IncomeSerializer
     permission_classes = [permissions.IsAuthenticated]
    
-    def get(self, request):
+    def get(self, request, month_id):
         owner = request.user
 
         user_info = UserProfile.objects.filter(user=request.user).first()
         currnency = user_info.prefered_currency if user_info else "$"
         # income per month
-        current_month = datetime.now().month
-        income_per_month = Income.objects.filter(owner=owner, income_date__month=current_month)
+        income_per_month = Income.objects.filter(owner=owner, income_date__month=month_id)
         current_month_serializer = self.serializer_class(income_per_month, many=True)
 
         # total income
-        total_income = Income.objects.filter(owner=owner, income_date__month=current_month).aggregate(Sum('amount'))
+        total_income = Income.objects.filter(owner=owner, income_date__month=month_id).aggregate(Sum('amount'))
         #sum by source group
 
-        sum_by_sources = Income.objects.filter(owner=owner, income_date__month=current_month).values('source').annotate(source_total=Sum('amount'))
+        sum_by_sources = Income.objects.filter(owner=owner, income_date__month=month_id).values('source').annotate(source_total=Sum('amount'))
 
         return Response(data={ 
                             "currency":currnency,

@@ -10,7 +10,7 @@ from .views.detail import IncomeDetial
 urlpatterns = [
     path('detail/<str:pk>', IncomeDetial.as_view(), name='add-income'),
     path('add', AddIncomeView.as_view(), name='add-income'),
-    path('list', ListIncomeView.as_view(), name='list-income'),
+    path('list/<str:month_id>', ListIncomeView.as_view(), name='list-income'),
     path('edit/<str:pk>', EditIncomeView.as_view(), name='edit-income'),
     path('delete/<str:pk>', DeleteIncomeView.as_view(), name='delete-income'),
     path('income-csv', ExportIncomeCsv.as_view(), name='income-csv'),
