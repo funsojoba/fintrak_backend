@@ -161,12 +161,12 @@ class ReportView(views.APIView):
                 "budget_balance":total_budget_balance if year_id == str(current_year) else None,
                 "currency":currency
             }
-        EmailServices.send_async(
-            template="report.html",
-            subject=f"Fintrak {full_month_name} Report",
-            recipients=[user.email],
-            context=context
-        )
+        # EmailServices.send_async(
+        #     template="report.html",
+        #     subject=f"Fintrak {full_month_name} Report",
+        #     recipients=[user.email],
+        #     context=context
+        # )
         return Response(
             data=context,
             status=status.HTTP_200_OK
