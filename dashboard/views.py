@@ -131,21 +131,26 @@ class ReportView(views.APIView):
         sum_of_expenses = Expense.objects.filter(
             owner=user, expense_date__month=month_id, expense_date__year=year_id).aggregate(Sum('amount'))
         
+        sum_of_expenses_amount, sum_of_income_amount = 0
+        
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
         available_balance = sum_of_income_amount - sum_of_expenses_amount
 
+        total_budget_income = 0
+        total_budget_expense = 0
+        total_budget_balance = 0
+
         total_budget = TotalBudget.objects.filter(owner=user, month=month_id).first()
-        total_budget_income = total_budget.total_budget_income if total_budget else 0
-        total_budget_expense = total_budget.total_budget_expense if total_budget else 0
-        total_budget_balance = total_budget.total if total_budget else 0
-        
+        if total_budget:
+            total_budget_income = total_budget.total_budget_income
+            total_budget_expense = total_budget.total_budget_expense
+            total_budget_balance = total_budget.total
 
         datetime_object = datetime.strptime(str(month_id), "%m")
         month_name = datetime_object.strftime("%b")
         full_month_name = datetime_object.strftime("%B")
 
-        print(type(year_id), type(current_year))
 
         context={
                 "all_expense":all_expense_serialized.data,
