@@ -285,10 +285,16 @@ def generate_report(user):
     available_balance = sum_of_income_amount - sum_of_expenses_amount
 
     total_budget = TotalBudget.objects.filter(owner=user, month=current_month).first()
-    total_budget_income = total_budget.total_budget_income if total_budget.total_budget_income else 0
-    total_budget_expense = total_budget.total_budget_expense if total_budget.total_budget_expense else 0
-    total_budget_balance = total_budget.total if total_budget.total else 0
     
+    total_budget_income = 0
+    total_budget_expense = 0
+    total_budget_balance = 0
+    
+    if total_budget:
+        total_budget_income = total_budget.total_budget_income 
+        total_budget_expense = total_budget.total_budget_expense
+        total_budget_balance = total_budget.total 
+        
 
     datetime_object = datetime.strptime(str(current_month), "%m")
     month_name = datetime_object.strftime("%b")
