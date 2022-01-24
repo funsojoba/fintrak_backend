@@ -1,4 +1,5 @@
 from decouple import config
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.views import APIView
 
@@ -15,6 +16,12 @@ from notifications.services import EmailServices
 
 class RegisterView(APIView):
     serializer_class = RegisterSerializer
+    
+    @swagger_auto_schema(
+        request_body=RegisterSerializer,
+        operation_description="Users register with their information",
+        operation_summary="Users register with their information",
+    )
     def post(self, request):
         data = request.data
         serializer = RegisterSerializer(data=data)

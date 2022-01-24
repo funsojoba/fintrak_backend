@@ -1,3 +1,5 @@
+from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.views import APIView
 from rest_framework import status, permissions
 
@@ -10,6 +12,11 @@ from authentication.serializers.verify_account_serializer import VerifyAccountSe
 class VerifyAccountView(APIView):
     serializer_class = VerifyAccountSerializer
 
+    @swagger_auto_schema(
+        request_body=VerifyAccountSerializer,
+        operation_description="Allows user verify their account",
+        operation_summary="Allows user verify their account",
+    )
     def post(self, request):
         data = request.data
         otp = data.get('otp')

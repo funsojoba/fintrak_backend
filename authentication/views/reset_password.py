@@ -1,3 +1,5 @@
+from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.views import APIView
 from lib.response import Response
 from rest_framework import status
@@ -9,6 +11,11 @@ from authentication.auth_utils.get_otp import create_random
 class ResetPasswordView(APIView):
     serializer_class = ResetPasswordSerializer
 
+    @swagger_auto_schema(
+        request_body=ResetPasswordSerializer,
+        operation_description="Allows user reset their password",
+        operation_summary="Allows user reset their password",
+    )
     def post(self, request):
         otp = request.GET.get('otp', '')
         email = request.GET.get('email', '')

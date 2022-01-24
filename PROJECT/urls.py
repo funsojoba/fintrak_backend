@@ -26,7 +26,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('expense/', include('expense_app.urls')),
     path('budget/', include('budget_app.urls')),
-    path('swagger/', schema_view.with_ui('swagger',
+    path('docs/', schema_view.with_ui('swagger',
         cache_timeout=0), name='schema-swagger-ui'),
 
 ]

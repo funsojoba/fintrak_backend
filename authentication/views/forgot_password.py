@@ -1,4 +1,5 @@
 from decouple import config
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.views import APIView
 from rest_framework import status
@@ -14,6 +15,11 @@ from notifications.services import EmailServices
 class ForgotPasswordView(APIView):
     serializer_class = ForgotPasswordSerializer
 
+    @swagger_auto_schema(
+        request_body=ForgotPasswordSerializer,
+        operation_description="Allows user reset their password with their email",
+        operation_summary="Allows user reset their password with their email",
+    )
     def post(self, request):
         data = request.data
         serializer = self.serializer_class(data=data)
