@@ -9,6 +9,7 @@ from rest_framework import status
 
 from authentication.serializers.register_serializer import RegisterSerializer
 from authentication.models.user import User
+from authentication.docs import schema_example
 
 from notifications.services import EmailServices
 
@@ -21,6 +22,7 @@ class RegisterView(APIView):
         request_body=RegisterSerializer,
         operation_description="Users register with their information",
         operation_summary="Users register with their information",
+        response=schema_example.COMPLETE_REGISTRATION_RESPONSES
     )
     def post(self, request):
         data = request.data
