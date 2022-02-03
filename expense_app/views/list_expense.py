@@ -15,22 +15,21 @@ class ListExpenseView(views.APIView):
     def get(self, request, month_id):
         owner = request.user
 
-        expense_query = Expense.objects.filter(owner=owner)
-        serializer = self.serializer_class(expense_query, many=True)
+        expense = Expense.objects.filter(owner=owner)
+        serializer = self.serializer_class(expense, many=True)
         data = serializer.data
 
         # expense per month
-        expense_per_month = Expense.objects.filter(
+        expense_per_month = expense.filter(
             owner=owner, expense_date__month=month_id).order_by('-expense_date')
-        current_month_serializer = self.serializer_class(
-            expense_per_month, many=True)
+        current_month_serializer = self.serializer_class(expense_per_month, many=True)
 
         # total income
-        total_expense = Expense.objects.filter(
+        total_expense = expense.filter(
             owner=owner, expense_date__month=month_id).aggregate(Sum('amount'))
 
         # sum by source group
-        expense_by_category = Expense.objects.filter(owner=owner, expense_date__month=month_id).values(
+        expense_by_category = expense.filter(owner=owner, expense_date__month=month_id).values(
             'category').annotate(category_total=Sum('amount'))
 
         user_currency = UserProfile.objects.filter(user=request.user).first()

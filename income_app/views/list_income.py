@@ -19,14 +19,16 @@ class ListIncomeView(APIView):
         user_info = UserProfile.objects.filter(user=request.user).first()
         currnency = user_info.prefered_currency if user_info else "$"
         # income per month
-        income_per_month = Income.objects.filter(owner=owner, income_date__month=month_id).order_by('-income_date')
+        
+        income = Income.objects.filter(owner=owner)
+        income_per_month = income.filter(owner=owner, income_date__month=month_id).order_by('-income_date')
         current_month_serializer = self.serializer_class(income_per_month, many=True)
 
         # total income
-        total_income = Income.objects.filter(owner=owner, income_date__month=month_id).aggregate(Sum('amount'))
+        total_income = income.filter(owner=owner, income_date__month=month_id).aggregate(Sum('amount'))
         #sum by source group
 
-        sum_by_sources = Income.objects.filter(owner=owner, income_date__month=month_id).values('source').annotate(source_total=Sum('amount'))
+        sum_by_sources = income.filter(owner=owner, income_date__month=month_id).values('source').annotate(source_total=Sum('amount'))
 
         return Response(data={ 
                             "currency":currnency,

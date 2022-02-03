@@ -34,12 +34,10 @@ class DashboardView(views.APIView):
         total_transaction = income.count() + expense.count()
 
         # SUM OF INCOME
-        sum_of_income = Income.objects.filter(
-            owner=user, income_date__month=month_id).aggregate(Sum('amount'))
+        sum_of_income = income.aggregate(Sum('amount'))
 
         # SUM OF EXPENSES
-        sum_of_expenses = Expense.objects.filter(
-            owner=user, expense_date__month=month_id).aggregate(Sum('amount'))
+        sum_of_expenses = expense.aggregate(Sum('amount'))
         
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
@@ -47,14 +45,12 @@ class DashboardView(views.APIView):
         available_balance = sum_of_income_amount - sum_of_expenses_amount
 
         # TOP 3 INCOMES
-        all_income = Income.objects.filter(
-            owner=user, income_date__month=month_id).order_by('-created_at')
+        all_income = income.order_by('?')
         all_income_serialized = IncomeSerializer(all_income, many=True)
 
 
         # TOP 3 EXPENSES
-        all_expense = Expense.objects.filter(
-            owner=user, expense_date__month=month_id).order_by('-created_at')
+        all_expense = expense.order_by('?')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
         days_income = [0] * 31
@@ -164,12 +160,7 @@ class ReportView(views.APIView):
                 "budget_balance":total_budget_balance if year_id == str(current_year) else None,
                 "currency":currency
             }
-        # EmailServices.send_async(
-        #     template="report.html",
-        #     subject=f"Fintrak {full_month_name} Report",
-        #     recipients=[user.email],
-        #     context=context
-        # )
+       
         return Response(
             data=context,
             status=status.HTTP_200_OK

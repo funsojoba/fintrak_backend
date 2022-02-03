@@ -5,6 +5,9 @@ SERVICE = web
 build:
 	$(COMPOSE) build
 
+build-no-cache:
+	$(COMPOSE) build --no-cache $(SERVICE)
+
 up:
 	$(COMPOSE) up
 
