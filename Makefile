@@ -8,6 +8,9 @@ build:
 up:
 	$(COMPOSE) up
 
+up-d:
+	$(COMPOSE) up -d
+
 createsuperuser:
 	$(COMPOSE) exec $(SERVICE) python manage.py createsuperuser
 
