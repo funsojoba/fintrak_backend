@@ -21,7 +21,7 @@ class ListExpenseView(views.APIView):
 
         # expense per month
         expense_per_month = Expense.objects.filter(
-            owner=owner, expense_date__month=month_id)
+            owner=owner, expense_date__month=month_id).order_by('-expense_date')
         current_month_serializer = self.serializer_class(
             expense_per_month, many=True)
 

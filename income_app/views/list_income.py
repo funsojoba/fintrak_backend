@@ -19,7 +19,7 @@ class ListIncomeView(APIView):
         user_info = UserProfile.objects.filter(user=request.user).first()
         currnency = user_info.prefered_currency if user_info else "$"
         # income per month
-        income_per_month = Income.objects.filter(owner=owner, income_date__month=month_id)
+        income_per_month = Income.objects.filter(owner=owner, income_date__month=month_id).order_by('-income_date')
         current_month_serializer = self.serializer_class(income_per_month, many=True)
 
         # total income
