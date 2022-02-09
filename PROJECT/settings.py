@@ -230,3 +230,7 @@ CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
+
+
+FRONT_END_URL = config('FRONT_END_URL', default="127.0.0.1:8000/")
+RESET_EMAIL_URL = config('RESET_EMAIL_URL', default="reset-password/")

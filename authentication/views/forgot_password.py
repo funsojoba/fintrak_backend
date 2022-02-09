@@ -1,4 +1,5 @@
 from decouple import config
+from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.views import APIView
@@ -33,12 +34,13 @@ class ForgotPasswordView(APIView):
 
         otp = user.otp
 
-        RESET_EMAIL_URL = config('RESET_EMAIL_URL')
+        FRONT_END_URL = settings.FRONT_END_URL
+        RESET_EMAIL_URL = settings.RESET_EMAIL_URL
         
-        reset_password_link =f'{RESET_EMAIL_URL}?otp={otp}&email={email}'
+        reset_password_link =f"{FRONT_END_URL}{RESET_EMAIL_URL}?otp={otp}&email={email}"
         context = {
-            "first_name":user.first_name,
-            "last_name":user.last_name,
+            "first_name":"user.first_name",
+            "last_name":"user.last_name",
             "reset_password_link":reset_password_link
         }
         EmailServices.send_async(
@@ -46,6 +48,7 @@ class ForgotPasswordView(APIView):
             subject='Reset Password', 
             recipients=[email], 
             context=context)
+        print(reset_password_link)
         
         return Response(data={"message":"reset password link sent to your email"}, status=status.HTTP_200_OK)
         
