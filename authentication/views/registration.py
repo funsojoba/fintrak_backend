@@ -8,7 +8,7 @@ from authentication.auth_utils.get_otp import create_random
 from rest_framework import status
 
 from authentication.serializers.register_serializer import RegisterSerializer
-from authentication.models.user import User
+from authentication.models.User import User
 from authentication.docs import schema_example
 
 from notifications.services import EmailServices

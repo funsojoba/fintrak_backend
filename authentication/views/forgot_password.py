@@ -7,7 +7,7 @@ from rest_framework import status
 
 from lib.response import Response
 from authentication.auth_utils.get_otp import create_random
-from authentication.models.user import User
+from authentication.models.User import User
 from authentication.serializers.forgot_password_serializer import ForgotPasswordSerializer
 
 from notifications.services import EmailServices

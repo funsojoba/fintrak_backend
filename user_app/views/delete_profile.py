@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from authentication.models.user import User
+from authentication.models.User import User
 
 
 class DeleteUserProfile(APIView):

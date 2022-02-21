@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 
 from lib.response import Response
-from authentication.models.user import User
+from authentication.models.User import User
 from user_app.serializer import AvatarSerializer
 
 

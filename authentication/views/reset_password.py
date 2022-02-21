@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from lib.response import Response
 from rest_framework import status
 
-from authentication.models.user import User
+from authentication.models.User import User
 from authentication.serializers.reset_password_serializer import ResetPasswordSerializer
 from authentication.auth_utils.get_otp import create_random
 

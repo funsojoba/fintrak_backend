@@ -4,7 +4,7 @@ from rest_framework import permissions, status
 from lib.response import Response
 from user_app.models import UserProfile
 from user_app.serializer import ChangePasswordSerializer
-from authentication.models.user import User
+from authentication.models.User import User
 
 
 class ChangePasswordView(APIView):
