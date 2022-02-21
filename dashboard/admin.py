@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # from django.contrib.auth.models import User
-from authentication.models.user import User
+from authentication.models.User import User
 from budget_app.models import BudgetExpense, BudgetIncome, TotalBudget
 
 
