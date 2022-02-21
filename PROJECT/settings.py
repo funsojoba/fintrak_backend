@@ -226,8 +226,8 @@ CORS_ALLOW_ALL_ORIGINS =True
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-CELERY_BROKER_URL = config("REDIS_URL", default="redis://redis:6379/0")
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+CELERY_BROKER_URL = config("REDIS_URL", default="redis://:pe45b3b5e6be1e3067011dcb47131604ece3a774abfe5d86a872fd6a6cf03a75b@ec2-34-232-235-161.compute-1.amazonaws.com:22350")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://:pe45b3b5e6be1e3067011dcb47131604ece3a774abfe5d86a872fd6a6cf03a75b@ec2-34-232-235-161.compute-1.amazonaws.com:22350")
 CELERY_MAX_RETRY = ""
 CELERY_RETRY_DELAY = ""
 
