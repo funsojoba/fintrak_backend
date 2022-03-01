@@ -37,8 +37,8 @@ class RegisterView(APIView):
             return Response(errors=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         otp = create_random()
-        EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL')
-        verification_link=f"{EMAIL_VERIFICATION_URL}?email={email}"
+        EMAIL_VERIFICATION_URL = config('FRONT_END_URL')
+        verification_link=f"{EMAIL_VERIFICATION_URL}/verify?email={email}"
         context={
             "first_name":first_name,
             "last_name":last_name,

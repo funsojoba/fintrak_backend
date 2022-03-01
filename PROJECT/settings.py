@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 import cloudinary
+import dj_database_url
 import django_heroku
 from pathlib import Path
 from decouple import config
@@ -99,16 +100,25 @@ WSGI_APPLICATION = 'PROJECT.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='postgres'),
-        'USER': config('USER', default='postgres'),
-        'PASSWORD': config('PASSWORD', default='postgres'),
-        'HOST': config('HOST', default='db'),
-        'PORT': config('PORT', default=5432)
-    }
-}
+DATABASE_URL = config(
+    "DATABASE_URL",
+    default="postgres://pwowfnormuaeva:e5904f9f66d63b5e9bc1842a9875cd9dfaf58230027c9b0a86f28a2d2ab8275e@ec2-18-209-153-180.compute-1.amazonaws.com:5432/dedegosshiv0hq",
+)
+
+
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default='postgres'),
+#         'USER': config('USER', default='postgres'),
+#         'PASSWORD': config('PASSWORD', default='postgres'),
+#         'HOST': config('HOST', default='db'),
+#         'PORT': config('PORT', default=5432)
+#     }
+# }
 
 
 # Password validation
