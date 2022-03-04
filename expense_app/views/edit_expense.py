@@ -10,32 +10,11 @@ class EditExpenseView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ExpenseSerializer
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         expense = Expense.objects.get(id=pk)
-        serializer = self.serializer_class(expense)
-
-        data = request.data
-
-        amount = data.get('amount', '')
-        category = data.get('category', '')
-        description = data.get('description', '')
-        expense_date = data.get('income_date', '')
-
-        if not amount:
-            amount = expense.amount
-
-        if not category:
-            category = expense.category
-
-        if not description:
-            description = expense.description
-
-        if not expense_date:
-            expense_date = expense.expense_date
-
-        expense.amount = amount
-        expense.category = category
-        expense.description = description
-        expense.expense_date = expense_date
-        expense.save()
-        return Response(data={"message": "success"}, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(expense, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data={"message": "success"}, status=status.HTTP_200_OK)
+            
+        return Response(errors={"message": "Failure"}, status=status.HTTP_400_BAD_REQUEST)

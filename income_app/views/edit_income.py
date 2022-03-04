@@ -10,36 +10,11 @@ class EditIncomeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = IncomeSerializer
 
-    def post(self, request, pk):
+    def patch(self, request, pk):
         income = Income.objects.get(id=pk)
-        serializer = self.serializer_class(income)
+        serializer = self.serializer_class(income, data=request.data, partial=True)
 
-        data = request.data
-
-        amount = data.get('amount', '')
-        source = data.get('source', '')
-        description = data.get('description', '')
-        income_date = data.get('income_date', '')
-
-        # for k, v in data.items():
-        #     if not v:
-        #         data[k] = serializer[k]
-
-        if not amount:
-            amount = income.amount
-
-        if not source:
-            source = income.source
-
-        if not description:
-            description = income.description
-
-        if not income_date:
-            income_date = income.income_date
-
-        income.amount = amount
-        income.source = source
-        income.description = description
-        income.income_date = income_date
-        income.save()
-        return Response(data={"message": "success"}, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data={"message": "success"}, status=status.HTTP_200_OK)
+        return Response(errors={"message":"wrong parameters"}, status=status.HTTP_400_BAD_REQUEST)
