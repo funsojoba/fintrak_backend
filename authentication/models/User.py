@@ -60,3 +60,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f'{self.first_name} {self.last_name} - {self.email}'
 
+
+
+@receiver(post_save, sender=User)
+def _post_save_receiver(sender, instance, created,  **kwargs):
+    if created:
+        user_profile = UserProfile.objects.filter(user=instance).first()
+        if not user_profile:
+            UserProfile.objects.create(user=instance) # create user profile  
+
