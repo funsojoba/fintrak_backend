@@ -223,8 +223,8 @@ EMAIL_VERIFICATION_URL = config('EMAIL_VERIFICATION_URL', default='')
 
 cloudinary.config(
     cloud_name=config('CLOUD_NAME', default=''),
-    api_key=config('API_KEY', default=''),
-    api_secret=config('API_SECRET', default='')
+    api_key=config('CLOUDINARY_API_KEY', default=''),
+    api_secret=config('CLOUDINARY_API_SECRET', default='')
 )
 
 django_heroku.settings(locals())
