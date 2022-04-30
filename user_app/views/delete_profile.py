@@ -12,4 +12,5 @@ class DeleteUserProfile(APIView):
         db_user = User.objects.get(id=user.id)
         db_user.is_active = False
         db_user.save()
+        # TODO: Send an email to the user to inform them that their account has been deactivated.
         return Response({"message":"account deleted"}, status=status.HTTP_204_NO_CONTENT)
