@@ -17,6 +17,12 @@ up-d:
 prune:
 	docker volume prune -f
 
+shell:
+	$(COMPOSE) exec $(SERVICE) python manage.py shell
+
+bash:
+	$(COMPOSE) exec -it $(SERVICE) bash
+
 createsuperuser:
 	$(COMPOSE) exec $(SERVICE) python manage.py createsuperuser
 
