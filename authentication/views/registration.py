@@ -36,23 +36,29 @@ class RegisterView(APIView):
         if not serializer.is_valid():
             return Response(errors=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+        # NOTE: deactivating this for now because of celery resources so users can log in
+        
+        
         otp = create_random()
-        EMAIL_VERIFICATION_URL = config('FRONT_END_URL')
-        verification_link=f"{EMAIL_VERIFICATION_URL}verify?email={email}"
-        context={
-            "first_name":first_name,
-            "last_name":last_name,
-            "otp":otp,
-            "verification_link":verification_link
-        }
-        EmailServices.send_async(
-            template="register.html",
-            subject="Verify Email",
-            recipients=[email],
-            context=context
-        )
+        # EMAIL_VERIFICATION_URL = config('FRONT_END_URL')
+        # verification_link=f"{EMAIL_VERIFICATION_URL}verify?email={email}"
+        # context={
+        #     "first_name":first_name,
+        #     "last_name":last_name,
+        #     "otp":otp,
+        #     "verification_link":verification_link
+        # }
+        # EmailServices.send_async(
+        #     template="register.html",
+        #     subject="Verify Email",
+        #     recipients=[email],
+        #     context=context
+        # )
+        
         user = User.objects.create(first_name=first_name, last_name=last_name, email=email, password=password, otp=otp)
+        user.is_active = True
         user.set_password(password)
         user.save()
 
-        return Response(data={"message":"Confirmation email sent to your email"}, status=status.HTTP_201_CREATED)
+        return Response(data={"message":"Registration successful", "status":True}, status=status.HTTP_201_CREATED)
