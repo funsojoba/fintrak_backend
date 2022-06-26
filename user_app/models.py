@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=256, blank=True, null=True)
     address = models.CharField(max_length=256, blank=True, null=True)
     date_of_birth = models.CharField(max_length=256, null=True, blank=True)
-    prefered_currency = models.CharField(max_length=256, default=DEFAULT_CURRENCY)
+    prefered_currency = models.CharField(max_length=256, default=DEFAULT_CURRENCY, null=True, blank=True)
 
     def __str__(self):
         return str(self.user) +'\'s profile'

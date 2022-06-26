@@ -1,6 +1,7 @@
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth.hashers import check_password
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -31,7 +32,7 @@ class LoginUser(APIView):
             user_password = check_password(serializer.validated_data['password'], user.password)
 
             if not user_password:
-                return Response(errors={"error": "incorrect password"})
+                return Response(errors={"error": "incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
 
             token = RefreshToken.for_user(user)
             data = {
@@ -39,4 +40,6 @@ class LoginUser(APIView):
                 "token": {"refresh": str(token), "access": str(token.access_token)},
             }
             return Response(data=data)
-        return Response(errors={"error": "User does not exist"})
+        return Response(
+            errors={"error": "User does not exist"},
+            status=status.HTTP_404_NOT_FOUND,)
