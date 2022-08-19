@@ -17,8 +17,8 @@ app.conf.beat_schedule = {
         'task': 'send_financial_report',
         'schedule': crontab(0, 0, day_of_month='28'),
     },
-    'send-report-now': {
-        'task': 'send_financial_report',
-        'schedule': crontab(hour=19, minute=20),
-    },
+    # 'send-report-now': {
+    #     'task': 'send_financial_report',
+    #     'schedule': crontab(hour=19, minute=20),
+    # },
 }
