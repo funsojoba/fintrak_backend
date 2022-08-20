@@ -1,4 +1,4 @@
-FROM python:3.8.0-slim as builder
+FROM python:3.10.6-slim as builder
 
 ENV PYTHONUNBUFFERED 1
 
