@@ -4,6 +4,7 @@ from .views.verify_account import VerifyAccountView
 from .views.forgot_password import ForgotPasswordView
 from .views.reset_password import ResetPasswordView
 from .views.login import LoginUser
+from .views.webhook import WebHookView
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -19,6 +20,7 @@ urlpatterns = [
     path('verify-account', VerifyAccountView.as_view(), name="verify-account"),
     path('forgot-password', ForgotPasswordView.as_view(), name="forgot-password"),
     path('reset-password', ResetPasswordView.as_view(), name="reset-password"),
+    path('webhook', WebHookView.as_view(), name="webhook"),
 ]
 
 
