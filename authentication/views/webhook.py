@@ -21,7 +21,7 @@ class WebHookView(APIView):
         operation_description="Webhook for notification preferences",
         operation_summary="Webhook for notification preferences",
     )
-    def get(self, request):
+    def post(self, request):
         
         serializer = LoginSerializer(data=request.data)
         service_response = NotificationPreferenceService.update_preference(request)
