@@ -1,3 +1,6 @@
+import hashlib
+import hmac
+import json
 from django.conf import settings
 
 
@@ -14,15 +17,21 @@ class NotificationPreferenceService:
     
     @classmethod
     def update_preference(cls, request):
-        signature = request.data.get("signature", "")
-        # is_verified: bool = cls._verify(
-        #     signing_key = settings.NOTIFICATION_PREFERENCE_SIGNING_KEY,
-        #     token = signature.get("token", ""),
-        #     timestamp = signature.get("timestamp", ""),
-        #     signature = signature.get("signature", "")
-        # )
+        signature_data = request.data.get("signature", "")
+        is_verified = False
+        if signature_data:
+            is_verified: bool = cls._verify(
+                signing_key = settings.NOTIFICATION_PREFERENCE_SIGNING_KEY,
+                token = signature_data.get('token', ''),
+                timestamp = signature_data.get("timestamp"),
+                signature = signature_data.get("signature")
+            )
         
-        print("SIGNATURE: {}".format(signature))
+        print("is_verified: ", is_verified)
+        print("SIGNATURE: {}".format(signature_data))
+        # print("TOKEN", signature_data.get('token', ''))
+        print("JSON_", json.dumps(signature_data))
+        print("Type: ", type(signature_data))
         # if not is_verified:
         #     print("Not verified", is_verified)
         # update the notifcation preference for the user

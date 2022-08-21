@@ -25,8 +25,6 @@ class WebHookView(APIView):
         
         serializer = LoginSerializer(data=request.data)
         service_response = NotificationPreferenceService.update_preference(request)
-        print("*****")
-        print(service_response)
         return Response(
             data={"onaga":"onaga"}
         )
