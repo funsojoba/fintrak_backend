@@ -32,6 +32,7 @@ class NotificationPreferenceService:
         # print("TOKEN", signature_data.get('token', ''))
         print("JSON_", json.dumps(signature_data))
         print("Type: ", type(signature_data))
+        print("REQUEST", request.data)
         # if not is_verified:
         #     print("Not verified", is_verified)
         # update the notifcation preference for the user
