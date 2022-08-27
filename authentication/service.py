@@ -17,6 +17,9 @@ class NotificationPreferenceService:
     
     @classmethod
     def update_preference(cls, request):
+        """
+        This is a psudo implementation for work!!!
+        """
         signature_data = request.data.get("signature", "")
         is_verified = False
         if signature_data:

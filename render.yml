@@ -1,0 +1,20 @@
+databases:
+  - name: fintrak
+    databaseName: postgres
+    user: fintrak
+
+services:
+  - type: web
+    name: fintrak
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn PROJECT.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: PROJECT
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
