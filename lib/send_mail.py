@@ -23,6 +23,8 @@ class EmailManager:
             text_content,
             self.from_email,
             self.recipients,
+            headers={"X-Mailgun-Variables": {"environment": "TESTING"}},
+            
         )
         message.attach_alternative(html_content, 'text/html')
         return message
