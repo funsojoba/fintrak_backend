@@ -112,10 +112,10 @@ DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': config('DB_NAME', default='postgres'),
-#         'USER': config('USER', default='postgres'),
-#         'PASSWORD': config('PASSWORD', default='postgres'),
-#         'HOST': config('HOST', default='db'),
-#         'PORT': config('PORT', default=5432)
+#         'USER': config('DB_USER', default='postgres'),
+#         'PASSWORD': config('DB_PASSWORD', default='postgres'),
+#         'HOST': config('DB_HOST', default='db'),
+#         'PORT': config('DB_PORT', default=5432)
 #     }
 # }
 
