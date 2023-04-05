@@ -28,7 +28,6 @@ Django==3.2.9
 django-celery-beat==2.2.1
 django-celery-results==2.2.0
 django-cors-headers==3.10.1
-django-heroku==0.0.0
 django-timezone-field==4.2.1
 djangorestframework==3.12.4
 djangorestframework-simplejwt==5.0.0

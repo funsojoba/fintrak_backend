@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 import cloudinary
 import dj_database_url
-import django_heroku
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
@@ -105,7 +104,7 @@ DATABASE_URL = config(
 )
 
 
-DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
+# DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
 
 # DATABASES = {
@@ -114,10 +113,22 @@ DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 #         'NAME': config('DB_NAME', default='postgres'),
 #         'USER': config('DB_USER', default='postgres'),
 #         'PASSWORD': config('DB_PASSWORD', default='postgres'),
-#         'HOST': config('DB_HOST', default='db'),
+#         'HOST': config('DB_HOST', default='fintrak_db'),
 #         'PORT': config('DB_PORT', default=5432)
 #     }
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POSTGRES_DBNAME"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASS"),
+        "HOST": config("PG_HOST"),
+        "PORT": config("PG_PORT"),
+    }
+}
+
 
 
 # Password validation
@@ -227,7 +238,6 @@ cloudinary.config(
     api_secret=config('CLOUDINARY_API_SECRET', default='')
 )
 
-django_heroku.settings(locals())
 
 
 CORS_ALLOW_ALL_ORIGINS =True

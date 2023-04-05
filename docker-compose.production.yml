@@ -12,13 +12,13 @@ services:
     environment:
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
-    stdin_open: true
-    tty: true
     depends_on:
-      - db
+      - fintrak_db
       - redis
+    networks:
+      - fintrak-network
 
-  db:
+  fintrak_db:
     image: 'postgres:12'
     hostname: postgres
     container_name: fintrak_db
@@ -27,15 +27,16 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DBNAME=postgres
     ports:
       - '5435:5432'
-
-  
+    networks:
+      - fintrak-network
 
   redis:
     image: redis:alpine
     container_name: fintra_redis
+    networks:
+      - fintrak-network
 
   celery:
     build: .
@@ -45,6 +46,8 @@ services:
     depends_on:
       - web
       - redis
+    networks:
+      - fintrak-network
   
   celery_beat:
     build: .
@@ -60,15 +63,7 @@ services:
       - ./:/app
     depends_on:
       - web
-      - db
+      - fintrak_db
       - redis
-
-  mailhog:
-    image: mailhog/mailhog:latest
-    restart: always
-    ports:
-      - 1026:1025
-      - 8026:8025
-
-
-
+    networks:
+      - fintrak-network
