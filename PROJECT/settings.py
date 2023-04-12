@@ -133,12 +133,7 @@ DATABASE_URL = config(
 #     }
 # }
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default = config('RENDER_POSTGRES_DB_URL'),
-        conn_max_age=600
-    )
-}
+DATABASES = {"default": dj_database_url.parse(config('RENDER_POSTGRES_DB_URL'), conn_max_age=0)}
 
 
 
