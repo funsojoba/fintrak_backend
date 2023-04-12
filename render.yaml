@@ -10,11 +10,11 @@ services:
     buildCommand: "./build.sh"
     startCommand: "gunicorn PROJECT.wsgi:application"
     envVars:
-      - key: postgres://fintrakdb_user:YKTC874DBi89f6nOgdKLxeUwKc0L8pMM@dpg-cgrf2qrk9u56e3mdi76g-a/fintrakdb
+      - key: $RENDER_POSTGRES_DB_URL
         fromDatabase:
           name: fintrakdb
           property: connectionString
-      - key: django-insecure-h#y9qfpv7c--gkx@8#@!pbi&6-koacim=8&n5e4*_nj-^qkedt
+      - key: $SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
