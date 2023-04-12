@@ -12,7 +12,7 @@ services:
     envVars:
       - key: postgres://fintrakdb_user:YKTC874DBi89f6nOgdKLxeUwKc0L8pMM@dpg-cgrf2qrk9u56e3mdi76g-a/fintrakdb
         fromDatabase:
-          name: PROJECT
+          name: fintrakdb
           property: connectionString
       - key: django-insecure-h#y9qfpv7c--gkx@8#@!pbi&6-koacim=8&n5e4*_nj-^qkedt
         generateValue: true
