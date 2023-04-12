@@ -118,15 +118,22 @@ DATABASE_URL = config(
 #     }
 # }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("POSTGRES_DBNAME"),
+#         "USER": config("POSTGRES_USER"),
+#         "PASSWORD": config("POSTGRES_PASS"),
+#         "HOST": config("PG_HOST"),
+#         "PORT": config("PG_PORT"),
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DBNAME"),
-        "USER": config("POSTGRES_USER"),
-        "PASSWORD": config("POSTGRES_PASS"),
-        "HOST": config("PG_HOST"),
-        "PORT": config("PG_PORT"),
-    }
+    'default': dj_database_url.config(
+        default = config('RENDER_POSTGRES_DB_URL'),
+        conn_max_age=600
+    )
 }
 
 

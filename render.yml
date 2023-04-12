@@ -1,7 +1,7 @@
 databases:
-  - name: fintrak
-    databaseName: postgres
-    user: fintrak
+  - name: fintrakdb
+    databaseName: fintrakdb
+    user: fintrakdb_user
 
 services:
   - type: web
@@ -10,11 +10,11 @@ services:
     buildCommand: "./build.sh"
     startCommand: "gunicorn PROJECT.wsgi:application"
     envVars:
-      - key: DATABASE_URL
+      - key: postgres://fintrakdb_user:YKTC874DBi89f6nOgdKLxeUwKc0L8pMM@dpg-cgrf2qrk9u56e3mdi76g-a/fintrakdb
         fromDatabase:
           name: PROJECT
           property: connectionString
-      - key: SECRET_KEY
+      - key: django-insecure-h#y9qfpv7c--gkx@8#@!pbi&6-koacim=8&n5e4*_nj-^qkedt
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
