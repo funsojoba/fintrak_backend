@@ -1,5 +1,8 @@
 version: '3.3'
 
+networks:
+  my-network:
+    driver: bridge
 services:
   web:
     build: .
@@ -8,7 +11,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - '8000:8000'
+      - 8000:8000
     environment:
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
@@ -17,10 +20,11 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - my-network
 
   db:
     image: 'postgres:12'
-    hostname: postgres
     container_name: fintrak_db
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -29,9 +33,11 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DBNAME=postgres
     ports:
-      - '5435:5432'
+      - '5432:5432'
+    networks:
+      - my-network
 
-  
+
 
   redis:
     image: redis:alpine
@@ -45,7 +51,7 @@ services:
     depends_on:
       - web
       - redis
-  
+
   celery_beat:
     build: .
     command:
@@ -69,6 +75,3 @@ services:
     ports:
       - 1026:1025
       - 8026:8025
-
-
-
