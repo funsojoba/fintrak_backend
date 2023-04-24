@@ -18,13 +18,14 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - db
+      - fintrak_db
       - redis
     networks:
       - my-network
 
-  db:
+  fintrak_db:
     image: 'postgres:12'
+    hostname: fintrak_db
     container_name: fintrak_db
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -66,7 +67,7 @@ services:
       - ./:/app
     depends_on:
       - web
-      - db
+      - fintrak_db
       - redis
 
   mailhog:

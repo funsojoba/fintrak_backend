@@ -116,7 +116,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DBNAME"),
         "USER": config("POSTGRES_USER"),
         "PASSWORD": config("POSTGRES_PASS"),
-        "HOST": "postgres",
+        "HOST": config("PG_HOST"),
         "PORT": config("PG_PORT"),
     }
 }
