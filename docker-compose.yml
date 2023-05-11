@@ -1,8 +1,5 @@
 version: '3.3'
 
-networks:
-  my-network:
-    driver: bridge
 services:
   web:
     build: .
@@ -18,14 +15,14 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - fintrak_db
+      - db
       - redis
     networks:
-      - my-network
+      - fintrak-network
 
-  fintrak_db:
+  db:
     image: 'postgres:12'
-    hostname: fintrak_db
+    hostname: postgres
     container_name: fintrak_db
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -35,8 +32,6 @@ services:
       - POSTGRES_DBNAME=postgres
     ports:
       - '5432:5432'
-    networks:
-      - my-network
 
 
 
@@ -67,7 +62,7 @@ services:
       - ./:/app
     depends_on:
       - web
-      - fintrak_db
+      - db
       - redis
 
   mailhog:
@@ -76,3 +71,7 @@ services:
     ports:
       - 1026:1025
       - 8026:8025
+
+networks:
+  fintrak-network:
+    driver: bridge

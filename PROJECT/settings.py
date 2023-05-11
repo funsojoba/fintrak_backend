@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
@@ -98,18 +98,14 @@ DATABASE_URL = config(
 
 # DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME', default='postgres'),
-#         'USER': config('DB_USER', default='postgres'),
-#         'PASSWORD': config('DB_PASSWORD', default='postgres'),
-#         'HOST': config('DB_HOST', default='fintrak_db'),
-#         'PORT': config('DB_PORT', default=5432)
+# if config("ENVIRONMENT") == "dev":
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db.sqlite3",
+#         }
 #     }
-# }
-
+# else:
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -120,9 +116,6 @@ DATABASES = {
         "PORT": config("PG_PORT"),
     }
 }
-# DATABASES = {"default": dj_database_url.parse(config('RENDER_POSTGRES_DB_URL'), conn_max_age=0)}
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
