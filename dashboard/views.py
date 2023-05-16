@@ -172,7 +172,7 @@ def get_report_context(user):
     current_month = datetime.now().month
     user_profile = UserProfile.objects.filter(user=user).first()
     currency = user_profile.prefered_currency if user_profile else '$'
-    
+
     # EXPENSES && INCOME QUERY
     expense_qs = Expense.objects.filter(owner=user, income_date__month=current_month)
     income_qs = Income.objects.filter(owner=user, income_date__month=current_month)
@@ -184,7 +184,7 @@ def get_report_context(user):
     # TOP 3 EXPENSES
     all_expense = expense_qs.order_by('-created_at')
     all_expense_serialized = ExpenseSerializer(all_expense, many=True)
-    
+
     # SUM OF INCOME
     sum_of_income = income_qs.aggregate(Sum('amount'))
 

@@ -13,8 +13,9 @@ class ListIncomeView(APIView):
     serializer_class = IncomeSerializer
     permission_classes = [permissions.IsAuthenticated]
    
-    def get(self, request, month_id):
+    def get(self, request):
         owner = request.user
+        month_id = request.GET.get("month", datetime.now().month)
 
         user_info = UserProfile.objects.filter(user=request.user).first()
         currnency = user_info.prefered_currency if user_info else "$"

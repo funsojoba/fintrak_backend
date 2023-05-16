@@ -12,8 +12,9 @@ class ListExpenseView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ExpenseSerializer
 
-    def get(self, request, month_id):
+    def get(self, request):
         owner = request.user
+        month_id = request.GET.get("month", datetime.now().month)
 
         expense = Expense.objects.filter(owner=owner)
         serializer = self.serializer_class(expense, many=True)
