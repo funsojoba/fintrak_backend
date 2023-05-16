@@ -21,68 +21,69 @@ from notifications.services import EmailServices
 class DashboardView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, month_id):
+    def get(self, request):
         user = request.user
         current_month = datetime.now().month
+        month_id = request.GET.get("month", datetime.now().month)
 
         # TOTAL TRANSACTIONS
-        income = Income.objects.filter(
+        income_qs = Income.objects.filter(
             owner=user, income_date__month=month_id)
-        expense = Expense.objects.filter(
+        expense_qs = Expense.objects.filter(
             owner=user, expense_date__month=month_id)
 
-        total_transaction = income.count() + expense.count()
+        total_transaction = income_qs.count() + expense_qs.count()
 
         # SUM OF INCOME
-        sum_of_income = income.aggregate(Sum('amount'))
+        sum_of_income = income_qs.aggregate(Sum('amount'))
 
         # SUM OF EXPENSES
-        sum_of_expenses = expense.aggregate(Sum('amount'))
-        
+        sum_of_expenses = expense_qs.aggregate(Sum('amount'))
+
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
 
         available_balance = sum_of_income_amount - sum_of_expenses_amount
 
         # TOP 3 INCOMES
-        all_income = income.order_by('-amount')
+        all_income = income_qs.order_by('-amount')
         all_income_serialized = IncomeSerializer(all_income, many=True)
 
 
         # TOP 3 EXPENSES
-        all_expense = expense.order_by('-amount')
+        all_expense = expense_qs.order_by('-amount')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
         days_income = [0] * 31
         days_expense = [0] * 31
         days_label = [i for i in range(1, 32)]
-        
+
         # INCOME GRAPH DATA
         income_dict = {}
         for i in all_income:
             income_dict[i.income_date.day] = i.amount
 
         income_days = [i.income_date.day for i in all_income]
-        
+
         for k, v in income_dict.items():
             days_income[k-1] = v
 
-        
+
         #EXPENSE GRAPH DATA
         expense_dict = {}
         for i in all_expense:
             expense_dict[i.expense_date.day] = i.amount
-        
+
         expense_days = [i.expense_date.day for i in all_expense]
-        
+
         for k, v in expense_dict.items():
             days_expense[k-1] = v
 
-        
+
         user_profile = UserProfile.objects.filter(user=request.user).first()
         user_currency = user_profile.prefered_currency if user_profile else "$"
 
-        
+
         results = {
             "total_transaction": total_transaction,
             "sum_of_income": sum_of_income_amount,
@@ -106,10 +107,10 @@ class ReportView(views.APIView):
         user = request.user
         current_month = datetime.now().month
         current_year = datetime.now().year
-        
+
         user_profile = UserProfile.objects.filter(user=user).first()
         currency = user_profile.prefered_currency if user_profile else '$'
-        
+
         # TOP 3 INCOMES
         all_income = Income.objects.filter(
             owner=user, income_date__month=month_id, income_date__year=year_id).order_by('-created_at')
@@ -126,9 +127,9 @@ class ReportView(views.APIView):
         # SUM OF EXPENSES
         sum_of_expenses = Expense.objects.filter(
             owner=user, expense_date__month=month_id, expense_date__year=year_id).aggregate(Sum('amount'))
-        
+
         sum_of_expenses_amount, sum_of_income_amount = 0, 0
-        
+
         sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
         sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
         available_balance = sum_of_income_amount - sum_of_expenses_amount
@@ -160,35 +161,36 @@ class ReportView(views.APIView):
                 "budget_balance":total_budget_balance if year_id == str(current_year) else None,
                 "currency":currency
             }
-       
+
         return Response(
             data=context,
             status=status.HTTP_200_OK
         )
-        
+
 
 def get_report_context(user):
-    current_month = datetime.now().month 
+    current_month = datetime.now().month
     user_profile = UserProfile.objects.filter(user=user).first()
     currency = user_profile.prefered_currency if user_profile else '$'
     
+    # EXPENSES && INCOME QUERY
+    expense_qs = Expense.objects.filter(owner=user, income_date__month=current_month)
+    income_qs = Income.objects.filter(owner=user, income_date__month=current_month)
+
     # TOP 3 INCOMES
-    all_income = Income.objects.filter(
-        owner=user, income_date__month=current_month).order_by('-created_at')
+    all_income = income_qs.order_by('-created_at')
     all_income_serialized = IncomeSerializer(all_income, many=True)
 
     # TOP 3 EXPENSES
-    all_expense = Expense.objects.filter(
-        owner=user, expense_date__month=current_month).order_by('-created_at')
+    all_expense = expense_qs.order_by('-created_at')
     all_expense_serialized = ExpenseSerializer(all_expense, many=True)
+    
     # SUM OF INCOME
-    sum_of_income = Income.objects.filter(
-        owner=user, income_date__month=current_month).aggregate(Sum('amount'))
+    sum_of_income = income_qs.aggregate(Sum('amount'))
 
     # SUM OF EXPENSES
-    sum_of_expenses = Expense.objects.filter(
-        owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
-    
+    sum_of_expenses = expense_qs.aggregate(Sum('amount'))
+
     sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
     sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
     available_balance = sum_of_income_amount - sum_of_expenses_amount
@@ -197,7 +199,7 @@ def get_report_context(user):
     total_budget_income = total_budget.total_budget_income if total_budget else 0
     total_budget_expense = total_budget.total_budget_expense if total_budget else 0
     total_budget_balance = total_budget.total if total_budget else 0
-    
+
 
     datetime_object = datetime.strptime(str(current_month), "%m")
     month_name = datetime_object.strftime("%b")
@@ -251,7 +253,7 @@ def generate_report(user):
     current_month = datetime.now().month
     user_profile = UserProfile.objects.filter(user=user).first()
     currency = user_profile.prefered_currency if user_profile else '$'
-    
+
     # TOP 3 INCOMES
     all_income = Income.objects.filter(
         owner=user, income_date__month=current_month).order_by('-created_at')
@@ -268,22 +270,22 @@ def generate_report(user):
     # SUM OF EXPENSES
     sum_of_expenses = Expense.objects.filter(
         owner=user, expense_date__month=current_month).aggregate(Sum('amount'))
-    
+
     sum_of_expenses_amount = sum_of_expenses['amount__sum'] if sum_of_expenses['amount__sum'] else 0
     sum_of_income_amount = sum_of_income['amount__sum'] if sum_of_income['amount__sum'] else 0
     available_balance = sum_of_income_amount - sum_of_expenses_amount
 
     total_budget = TotalBudget.objects.filter(owner=user, month=current_month).first()
-    
+
     total_budget_income = 0
     total_budget_expense = 0
     total_budget_balance = 0
-    
+
     if total_budget:
-        total_budget_income = total_budget.total_budget_income 
+        total_budget_income = total_budget.total_budget_income
         total_budget_expense = total_budget.total_budget_expense
-        total_budget_balance = total_budget.total 
-        
+        total_budget_balance = total_budget.total
+
 
     datetime_object = datetime.strptime(str(current_month), "%m")
     month_name = datetime_object.strftime("%b")

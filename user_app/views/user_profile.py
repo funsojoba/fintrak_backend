@@ -14,5 +14,5 @@ class GetUserProfile(APIView):
         user_profile = UserProfile.objects.filter(user=user).first()
 
         profile_serializer = UserProfileSerializer(user_profile)
-        
+
         return Response(data={'profile':profile_serializer.data}, status=status.HTTP_200_OK)
