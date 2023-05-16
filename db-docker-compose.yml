@@ -1,0 +1,13 @@
+ db:
+    image: 'postgres:12'
+    container_name: db
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DBNAME=postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - fintrak-api-network

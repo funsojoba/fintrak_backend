@@ -15,25 +15,9 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - db
       - redis
     networks:
-      - fintrak-network
-
-  db:
-    image: 'postgres:12'
-    hostname: postgres
-    container_name: fintrak_db
-    volumes:
-      - ./tmp/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DBNAME=postgres
-    ports:
-      - '5432:5432'
-
-
+      - fintrak-api-network
 
   redis:
     image: redis:alpine
@@ -62,7 +46,6 @@ services:
       - ./:/app
     depends_on:
       - web
-      - db
       - redis
 
   mailhog:
@@ -73,5 +56,5 @@ services:
       - 8026:8025
 
 networks:
-  fintrak-network:
+  fintrak-api-network:
     driver: bridge
