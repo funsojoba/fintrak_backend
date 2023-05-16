@@ -45,12 +45,12 @@ class DashboardView(views.APIView):
         available_balance = sum_of_income_amount - sum_of_expenses_amount
 
         # TOP 3 INCOMES
-        all_income = income.order_by('?')
+        all_income = income.order_by('-amount')
         all_income_serialized = IncomeSerializer(all_income, many=True)
 
 
         # TOP 3 EXPENSES
-        all_expense = expense.order_by('?')
+        all_expense = expense.order_by('-amount')
         all_expense_serialized = ExpenseSerializer(all_expense, many=True)
 
         days_income = [0] * 31
