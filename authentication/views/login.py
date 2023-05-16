@@ -12,6 +12,7 @@ from lib.response import Response
 
 
 from authentication.serializers.login_serializer import LoginSerializer
+from authentication.docs import schema_example
 
 class LoginUser(APIView):
     
@@ -19,6 +20,8 @@ class LoginUser(APIView):
         request_body=LoginSerializer,
         operation_description="Allows users to login",
         operation_summary="Login users",
+        tags=["Auth"],
+        responses=schema_example.LOGIN_RESPONSE
     )
     def post(self, request):
         
@@ -32,7 +35,7 @@ class LoginUser(APIView):
             user_password = check_password(serializer.validated_data['password'], user.password)
 
             if not user_password:
-                return Response(errors={"error": "incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(errors={"error": "invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
             token = RefreshToken.for_user(user)
             data = {
@@ -41,5 +44,5 @@ class LoginUser(APIView):
             }
             return Response(data=data)
         return Response(
-            errors={"error": "User does not exist"},
-            status=status.HTTP_404_NOT_FOUND,)
+            errors={"error": "Invalid credentials"},
+            status=status.HTTP_400_BAD_REQUEST,)

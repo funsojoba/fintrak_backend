@@ -18,9 +18,22 @@ from budget_app.models import TotalBudget
 from user_app.models import UserProfile
 from notifications.services import EmailServices
 
+from dashboard.docs import schema_examples
+
+from drf_yasg.utils import swagger_auto_schema
+
 class DashboardView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            schema_examples.MONTHS_PARAMS,
+        ],
+        operation_description="Get dashboard data",
+        operation_summary="Get dashboard data",
+        tags=["Dashboard"],
+        responses=schema_examples.DASHBOARD_RESPONSE,
+    )
     def get(self, request):
         user = request.user
         current_month = datetime.now().month

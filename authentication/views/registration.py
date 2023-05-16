@@ -22,7 +22,8 @@ class RegisterView(APIView):
         request_body=RegisterSerializer,
         operation_description="Users register with their information",
         operation_summary="Users register with their information",
-        response=schema_example.COMPLETE_REGISTRATION_RESPONSES
+        responses=schema_example.REGISTRATION_RESPONSE,
+        tags=["Auth"],
     )
     def post(self, request):
         data = request.data
