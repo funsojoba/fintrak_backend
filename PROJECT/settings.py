@@ -96,7 +96,7 @@ DATABASE_URL = config(
 )
 
 
-# DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=0)}
 
 # if config("ENVIRONMENT") == "dev":
 #     DATABASES = {
@@ -106,16 +106,16 @@ DATABASE_URL = config(
 #         }
 #     }
 # else:
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DBNAME"),
-        "USER": config("POSTGRES_USER"),
-        "PASSWORD": config("POSTGRES_PASS"),
-        "HOST": config("PG_HOST"),
-        "PORT": config("PG_PORT"),
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("POSTGRES_DBNAME"),
+#         "USER": config("POSTGRES_USER"),
+#         "PASSWORD": config("POSTGRES_PASS"),
+#         "HOST": config("PG_HOST"),
+#         "PORT": config("PG_PORT"),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
