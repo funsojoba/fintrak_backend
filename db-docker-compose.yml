@@ -10,7 +10,6 @@ services:
       - POSTGRES_DBNAME=postgres
     ports:
       - '5432:5432'
-    command: python manage.py runserver 0.0.0.0:8000
     networks:
       - fintrak-api-network
 celery_beat:
