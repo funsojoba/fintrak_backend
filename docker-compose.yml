@@ -4,11 +4,10 @@ services:
   web:
     build: .
     container_name: fintrak_image
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash build.sh
     volumes:
       - .:/app
     ports:
       - 8000:8000
     stdin_open: true
     tty: true
-
